@@ -28,8 +28,7 @@ const NUM_TEST_ELEMENTS = NUM_DATASET_ELEMENTS - NUM_TRAIN_ELEMENTS;
 
 const MNIST_IMAGES_SPRITE_PATH =
     'http://127.0.0.1:8080/data/mnist/mnist_images.png';
-//   http://127.0.0.1:8080/data/mnist/mnist_images.png
-//   http://localhost:8080/data/mnist/mnist_images.png
+
 const MNIST_LABELS_PATH =
     'http://127.0.0.1:8080/data/mnist/mnist_labels_uint8';
 

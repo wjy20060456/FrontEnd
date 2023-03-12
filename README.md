@@ -1,7 +1,31 @@
-# Vue 3 + Vite
+# FrontEnd
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+HomePage项目总共分为五个模块，分别为：首页、搜索、笔记、数据和登录
 
-## Recommended IDE Setup
+## 首页
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+首页有三个按钮，通过这三个按钮可以实现一个简单的AI应用——手写数字识别
+
+- 首先点击“侧栏”来调出Visor界面，界面给出了手写数字的实例
+
+- 然后点击“清除”按钮以将方框区域内部变为黑色，之后要在方框内部用滑动鼠标的方式写入希望预测的阿拉伯数字
+
+- 最后点击“预测”，此时侧边会展现两个训练坐标系以显示训练效果，训练一共有50个Epoch，结束后会通过弹窗的方式告知预测结果
+
+![](https://p.ipic.vip/ft6dco.png)
+
+![](https://p.ipic.vip/b2sbiv.png)
+
+![](https://p.ipic.vip/dzjl9i.png)
+
+## 笔记
+
+笔记页面由三块组成，分别为一个“Python学习”的笔记名称卡片、一个用来展示笔记主体部分的iframe和一个用来展示书籍目录的树形组件
+
+![](https://p.ipic.vip/2loszt.png)
+
+## 数据
+
+此页面可以通过调用后端债券数据接口获取近一个月或近两年的数据，并通过ECharts组件将十年期国债利率的数据展示出来
+
+![](https://p.ipic.vip/liq4y4.png)
