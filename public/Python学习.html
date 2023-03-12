@@ -1,0 +1,2605 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>Python学习</title>
+</head>
+<body><h1 id='数据分析'>数据分析</h1>
+<pre><code class='language-python' lang='python'># 包含两种数据类型：Series与DataFrame
+import pandas as pd
+sheet1_data = pd.read_excel(&quot;./数据分析测试题.xlsx&quot;)
+sheet1_data
+sheet2_data = pd.read_excel(&quot;./数据分析测试题.xlsx&quot;, sheet_name=&quot;第一阶段第二套&quot;)
+sheet2_data
+type(sheet2_data)
+df1 = pd.DataFrame({&quot;a&quot;:[1,2,3],
+                    &quot;b&quot;:[4,5,6]})
+df1
+df2 = pd.DataFrame({&quot;aa&quot;:[1,2,3],
+                    &quot;bbb&quot;:[4,5,6]}, index=[101, 102, 103])
+df2
+# 查看形状
+sheet1_data.shape
+type(sheet1_data.shape)
+sheet1_data.dtypes
+# object --&gt; 字符串
+# int64 --&gt; 整数
+sheet1_data.index
+sheet1_data.columns
+sheet1_data.values
+type(sheet1_data.values)
+sheet1_data.size
+sheet1_data.head(10)
+sheet1_data[&quot;题型&quot;].head()
+sheet1_data[[&quot;题型&quot;, &quot;题干&quot;]].head()
+type(sheet1_data[&quot;题型&quot;])
+df2[[True, False, True]]
+sheet1_data[&#39;难度&#39;] == 2
+sheet1_data[sheet1_data[&#39;难度&#39;] == 2]
+sheet1_data.loc[[1, 2, 3]]
+sheet1_data.loc[[1, 2, 3], [&quot;题干&quot;, &quot;题型&quot;]]
+sheet1_data.loc[[1, 2, 3], &quot;题干&quot;:]
+sheet1_data.head()
+sheet1_data.iloc[[0,1,2,3], [0,1,2]]
+sheet1_data.iloc[[0,1,2,3], 0:3]
+sheet1_data[&quot;专业&quot;][3]
+sheet1_data[[&quot;题干&quot;, &quot;题型&quot;]]
+sheet1_data.at[1, &quot;题干&quot;]
+sheet1_data.loc[1, &quot;题干&quot;]
+sheet1_data.iat[1, 4]
+sheet3_data = pd.read_excel(&quot;数据分析测试题.xlsx&quot;, sheet_name = &quot;第一阶段第三套&quot;)
+sheet3_data
+final_data = pd.concat([sheet1_data,sheet2_data,sheet3_data])
+final_data.count()
+final_data.info()
+!pip install openpyxl
+df3 = pd.DataFrame({
+  &quot;姓名&quot;:[&quot;建国&quot;, &quot;爱国&quot;, &quot;卫国&quot;, &quot;嘎子&quot;],
+  &quot;年龄&quot;:[17, 18, 19, 20]
+})
+df3
+df3.loc[3]
+df3.loc[4] = [&quot;爱党&quot;, 21]
+df3
+df3[&#39;年龄&#39;]
+df3[&quot;是否入党&quot;] = [&quot;是&quot;, &quot;是&quot;, &quot;是&quot;, &quot;是&quot;, &quot;是&quot;]
+df3 = df3.drop(0)
+df3.drop(1, inplace=True)
+df3.drop([&quot;年龄&quot;], axis=1)
+</code></pre>
+<pre><code class='language-python' lang='python'>import pandas as pd
+data = pd.read_csv(&quot;salaries.csv&quot;)
+data.head()
+data.drop([&#39;Id&#39;], axis=1)
+data.columns
+data.columns = [&quot;员工姓名&quot;,&quot;员工职位&quot;,&quot;基本工资&quot;,&quot;加班工资&quot;,&quot;其他支付&quot;,&quot;福利&quot;,&quot;总共支付&quot;,&quot;总共支付加福利&quot;,&quot;入职年份&quot;,&quot;附加说明&quot;,&quot;代理&quot;,&quot;状态&quot;]
+</code></pre>
+<h2 id='apple面试题'>Apple面试题</h2>
+<pre><code class='language-python' lang='python'>data[&#39;BasePay&#39;].groupby(data[&#39;Year&#39;]).mean()
+--------------------------------------------------------------
+import pandas as pd
+data = pd.read_excel(&quot;/Users/wjy/Desktop/Question/Test_Table.xlsx&quot;)
+s = data[&#39;Name&#39;].str.extract(r&#39;(^A\w*)&#39;)[0].dropna(axis=0,how=&#39;any&#39;)
+df1 = data.loc[s.index, :]
+df2 = data[data[&#39;Height&#39;]&gt;1.64]
+df3 = data[data[&#39;Weight&#39;]&lt;135]
+with pd.ExcelWriter(&#39;/Users/wjy/Desktop/answer.xlsx&#39;) as writer:
+    df1.to_excel(writer, sheet_name=&#39;Sheet1&#39;, index=False)
+    df2.to_excel(writer, sheet_name=&#39;Sheet2&#39;, index=False)
+    df3.to_excel(writer, sheet_name=&#39;Sheet3&#39;, index=False)
+--------------------------------------------------------------
+import matplotlib.pyplot as plt
+plt.boxplot(df3[&#39;Weight&#39;])
+plt.show()
+# print(&quot;It is normally distributed, because the population
+# is normally distributed and this is a sample of the population.&quot;)
+plt.bar(df3[&#39;Lucky_color&#39;].groupby(df3[&#39;Lucky_color&#39;]).count().index,
+        df3[&#39;Lucky_color&#39;].groupby(df3[&#39;Lucky_color&#39;]).count())
+plt.show()
+</code></pre>
+<h2 id='quantinv面试题'>Quantinv面试题</h2>
+<h3 id='python面试考察题目'>Python面试考察题目</h3>
+<h4 id='part-1'>Part 1</h4>
+<p>1、L为列表（list），现想去除L中重复的元素，形成新的列表</p>
+<pre><code class='language-python' lang='python'>numlist = [1, 2, 2, 3, 4, 5]
+list(set(numlist))
+</code></pre>
+<p>2、D为一个字典（dict），现想去除D中含有‘test’的元素，形成新的字典</p>
+<pre><code class='language-python' lang='python'>dict = {&#39;test&#39;:&#39;abc&#39;, &#39;Jerry&#39;:&#39;Wang&#39;}
+{k: v for k, v in dict.items() if k != &#39;test&#39;}
+</code></pre>
+<p>3、新建一个10行的DataFrame，使用‘A’，‘B’，‘C’列名，分别赋值1,2,3，并对各列数据分组求和</p>
+<pre><code class='language-python' lang='python'>import pandas as pd
+import numpy as np
+data = pd.DataFrame(np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]), columns=[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;])
+data.groupby(data[&quot;a&quot;])[&quot;b&quot;].sum()
+</code></pre>
+<p>4、数据库有一张全年级成绩单，字段为：class_id, student_id, courst_id, score</p>
+<ul>
+<li>求全年级前10的学生id及总分</li>
+<li>求各班级的总分平均，科目平均分</li>
+
+</ul>
+<figure><table>
+<thead>
+<tr><th style='text-align:center;' >index</th><th style='text-align:center;' >class_id</th><th style='text-align:center;' >student_id</th><th style='text-align:center;' >student_name</th><th style='text-align:center;' >course_id</th><th style='text-align:center;' >score</th></tr></thead>
+<tbody><tr><td style='text-align:center;' >1</td><td style='text-align:center;' >1</td><td style='text-align:center;' >1</td><td style='text-align:center;' >小明</td><td style='text-align:center;' >1</td><td style='text-align:center;' >90</td></tr><tr><td style='text-align:center;' >2</td><td style='text-align:center;' >1</td><td style='text-align:center;' >2</td><td style='text-align:center;' >小红</td><td style='text-align:center;' >1</td><td style='text-align:center;' >95</td></tr><tr><td style='text-align:center;' >3</td><td style='text-align:center;' >1</td><td style='text-align:center;' >3</td><td style='text-align:center;' >小军</td><td style='text-align:center;' >1</td><td style='text-align:center;' >88</td></tr><tr><td style='text-align:center;' >4</td><td style='text-align:center;' >1</td><td style='text-align:center;' >4</td><td style='text-align:center;' >小米</td><td style='text-align:center;' >1</td><td style='text-align:center;' >73</td></tr><tr><td style='text-align:center;' >5</td><td style='text-align:center;' >2</td><td style='text-align:center;' >5</td><td style='text-align:center;' >小白</td><td style='text-align:center;' >1</td><td style='text-align:center;' >81</td></tr><tr><td style='text-align:center;' >6</td><td style='text-align:center;' >2</td><td style='text-align:center;' >6</td><td style='text-align:center;' >小兵</td><td style='text-align:center;' >1</td><td style='text-align:center;' >55</td></tr><tr><td style='text-align:center;' >7</td><td style='text-align:center;' >2</td><td style='text-align:center;' >7</td><td style='text-align:center;' >小林</td><td style='text-align:center;' >1</td><td style='text-align:center;' >85</td></tr><tr><td style='text-align:center;' >8</td><td style='text-align:center;' >3</td><td style='text-align:center;' >8</td><td style='text-align:center;' >小新</td><td style='text-align:center;' >1</td><td style='text-align:center;' >91</td></tr><tr><td style='text-align:center;' >9</td><td style='text-align:center;' >3</td><td style='text-align:center;' >9</td><td style='text-align:center;' >小王</td><td style='text-align:center;' >1</td><td style='text-align:center;' >89</td></tr><tr><td style='text-align:center;' >10</td><td style='text-align:center;' >3</td><td style='text-align:center;' >10</td><td style='text-align:center;' >小丽</td><td style='text-align:center;' >1</td><td style='text-align:center;' >88</td></tr><tr><td style='text-align:center;' >11</td><td style='text-align:center;' >1</td><td style='text-align:center;' >1</td><td style='text-align:center;' >小明</td><td style='text-align:center;' >2</td><td style='text-align:center;' >70</td></tr><tr><td style='text-align:center;' >12</td><td style='text-align:center;' >1</td><td style='text-align:center;' >2</td><td style='text-align:center;' >小红</td><td style='text-align:center;' >2</td><td style='text-align:center;' >78</td></tr><tr><td style='text-align:center;' >13</td><td style='text-align:center;' >1</td><td style='text-align:center;' >3</td><td style='text-align:center;' >小军</td><td style='text-align:center;' >2</td><td style='text-align:center;' >75</td></tr><tr><td style='text-align:center;' >14</td><td style='text-align:center;' >1</td><td style='text-align:center;' >4</td><td style='text-align:center;' >小米</td><td style='text-align:center;' >2</td><td style='text-align:center;' >80</td></tr><tr><td style='text-align:center;' >15</td><td style='text-align:center;' >2</td><td style='text-align:center;' >5</td><td style='text-align:center;' >小白</td><td style='text-align:center;' >2</td><td style='text-align:center;' >75</td></tr><tr><td style='text-align:center;' >16</td><td style='text-align:center;' >2</td><td style='text-align:center;' >6</td><td style='text-align:center;' >小兵</td><td style='text-align:center;' >2</td><td style='text-align:center;' >99</td></tr><tr><td style='text-align:center;' >17</td><td style='text-align:center;' >2</td><td style='text-align:center;' >7</td><td style='text-align:center;' >小林</td><td style='text-align:center;' >2</td><td style='text-align:center;' >45</td></tr><tr><td style='text-align:center;' >18</td><td style='text-align:center;' >3</td><td style='text-align:center;' >8</td><td style='text-align:center;' >小新</td><td style='text-align:center;' >2</td><td style='text-align:center;' >75</td></tr><tr><td style='text-align:center;' >19</td><td style='text-align:center;' >3</td><td style='text-align:center;' >9</td><td style='text-align:center;' >小王</td><td style='text-align:center;' >2</td><td style='text-align:center;' >97</td></tr><tr><td style='text-align:center;' >20</td><td style='text-align:center;' >3</td><td style='text-align:center;' >10</td><td style='text-align:center;' >小丽</td><td style='text-align:center;' >2</td><td style='text-align:center;' >88</td></tr></tbody>
+</table></figure>
+<pre><code class='language-sql' lang='sql'>SELECT student_id, SUM(score)
+FROM testsheet
+GROUP BY student_id
+ORDER BY SUM(score) DESC
+LIMIT 2
+
+SELECT class_id, AVG(sum_score)
+from (SELECT class_id, student_id, SUM(score) AS sum_score
+FROM testsheet
+GROUP BY class_id, student_id) temp
+GROUP BY class_id
+
+SELECT temp.class_id, temp.course_id, temp.sum_score/temp.c
+FROM (SELECT class_id, course_id, SUM(score) AS sum_score, count(score) AS c
+FROM testsheet
+GROUP BY class_id, course_id) temp
+ORDER BY temp.class_id, temp.course_id ASC
+</code></pre>
+<p>5、D为DataFrame，列名为‘code’，‘value’，请将code在‘000001’至‘600000’范围内的行，对应的value都改为0</p>
+<pre><code class='language-python' lang='python'>import pandas as pd
+import numpy as np
+data = pd.DataFrame(np.array([[1, 1], [600000, 1], [600002, 1]]), columns=[&#39;code&#39;, &#39;value&#39;])
+data.loc[((1 &lt;= data[&quot;code&quot;]) &amp; (data[&quot;code&quot;] &lt;= 600000)), &quot;value&quot;] = 0
+</code></pre>
+<p>6、D1，D2都为同样格式的DataFrame，请将D1 D2按行拼接起来</p>
+<pre><code class='language-python' lang='python'>data1.append(data2)
+</code></pre>
+<p>7、D1，D2为含有‘code’的DataFrame，请将D1 D2按‘code’列元素拼接起来</p>
+<pre><code class='language-python' lang='python'>pd.merge(df1,df2,on=&#39;code&#39;)
+</code></pre>
+<p>8、重置DataFrame的索引</p>
+<pre><code class='language-python' lang='python'>data.rename(columns = {&#39;code&#39;:&#39;Code&#39;,&#39;value&#39;:&#39;Value&#39;},inplace = True)
+</code></pre>
+<p>9、S为n长度序列（series），将S中的元素加上对应的序列位置值（1,2,3...n）</p>
+<pre><code class='language-python' lang='python'>ser = pd.Series([1, 2, 3])
+ser + ser.index + 1
+</code></pre>
+<h4 id='part-2'>Part 2</h4>
+<pre><code class='language-python' lang='python'># 请写出执行结果
+nums = [&#39;flower&#39;, &#39;flow&#39;, &#39;fight&#39;]
+for i in zip(nums):
+  print(i)
+  
+# (&#39;flower&#39;,)
+# (&#39;flow&#39;,)
+# (&#39;fight&#39;,)
+
+for i in zip(*nums):
+  print(i)
+  
+# (&#39;f&#39;, &#39;f&#39;, &#39;f&#39;)
+# (&#39;l&#39;, &#39;l&#39;, &#39;i&#39;)
+# (&#39;o&#39;, &#39;o&#39;, &#39;g&#39;)
+# (&#39;w&#39;, &#39;w&#39;, &#39;h&#39;)
+</code></pre>
+<pre><code class='language-python' lang='python'># 请写出执行结果
+In [5]: [m(2) for m in (lambda x: i * x for i in range(4))]
+Out[5]: [0, 2, 4, 6]
+</code></pre>
+<pre><code class='language-python' lang='python'>d = {&quot;奇数&quot;: [1, 3, 5], &quot;偶数&quot;: [2, 4, 6]}
+dd = {
+    1: &quot;奇数&quot;,
+    2: &quot;偶数&quot;,
+    3: &quot;奇数&quot;,
+    4: &quot;偶数&quot;,
+    5: &quot;奇数&quot;,
+    6: &quot;偶数&quot;,
+}
+# 请写出将d变为dd的代码（不要求键的顺序一致）
+# 代码尽可能简单高效
+dd = {}
+for v, (i, j, k) in d.items():
+    dd[i] = v
+    dd[j] = v
+    dd[k] = v
+dd
+</code></pre>
+<pre><code class='language-python' lang='python'># 列表展开
+a = [[1, 2], [3, 4], [5, 6]]
+a_expand = [1, 2, 3, 4, 5, 6]
+
+b = [
+  [[1, 2], [3, 4]],
+  [[5, 6],[7, 8]]
+]
+b_expand = [1, 2, 3, 4, 5, 6, 7, 8]
+
+c = [
+  1,
+  2,
+  [3, 4],
+  [[5, 6],[7, 8]],
+  [[[9, 10], [11, 12]], [[13, 14], [15, 16]]]
+] # 难度较大
+c_expand = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
+# 请将a, b, c展开成对应的a_expand, b_expand, c_expand
+a = [[1, 2], [3, 4], [5, 6]]
+a_expand = []
+for x in itertools.chain(*a):
+  a_expand.append(x)
+a_expand
+
+b = [
+  [[1, 2], [3, 4]],
+  [[5, 6],[7, 8]]
+]
+b_1 = []
+for x in itertools.chain(*b):
+  b_1.append(x)
+b_expand = []
+for x in itertools.chain(*b_1):
+  b_expand.append(x)
+b_expand
+
+
+def flat(nums):
+    res = []
+    for i in nums:
+        if isinstance(i, list):
+            res.extend(flat(i))
+        else:
+            res.append(i)
+    return res
+</code></pre>
+<pre><code class='language-python' lang='python'># 请写出执行结果
+def fn1():
+  return(lambda x: i * x for i in range(4))
+def fn2():
+  return(lambda x: i * x for i in range(4))
+
+for f in fn1():
+  print(f(2))
+  
+for f in fn2():
+  print(f(2))
+
+# Output:
+0
+2
+4
+6
+0
+2
+4
+6
+</code></pre>
+<pre><code class='language-python' lang='python'># 请写出执行结果
+def append(number, number_list=[]):
+  number_list.append(number)
+  return number_list
+
+print(append(1))
+print(append(2))
+
+# Output:
+[1]
+[1, 2]
+</code></pre>
+<pre><code class='language-python' lang='python'># 将 s=&#39;python&#39; 逆序转换为 ss = &#39;nohtyp&#39;
+s=&#39;python&#39;
+&quot;&quot;.join(reversed(s))
+# 将 字符串&#39;20180808&#39;转为时间格式
+from datetime import datetime
+datetime.strptime(&quot;20180202&quot;, &quot;%Y%m%d&quot;)
+</code></pre>
+<pre><code class='language-python' lang='python'>df = pd.DataFrame({
+  &#39;k&#39;: [&#39;a&#39;,&#39;a&#39;,&#39;b&#39;,&#39;b&#39;,&#39;b&#39;,&#39;c&#39;,&#39;c&#39;,&#39;e&#39;,&#39;d&#39;],
+  &#39;v&#39;: [1, 1, 2, 2, 2, 3, 3, 4, 5]
+})
+# 请将df按k列分组，每组只取一行
+df.groupby(&quot;k&quot;).head(1)
+# 对df按k列分组，对v列求和
+df.groupby(&quot;k&quot;).sum()
+# 给df添加新的列W，值为v列值的平方
+df.insert(df.shape[1], &quot;W&quot;, df[&quot;v&quot;] ** 2)
+# 给df添加新的列y，值为v列值+’s‘，如’1s‘，’2s‘
+df.insert(df.shape[1], &quot;y&quot;, df[&quot;v&quot;].astype(&quot;str&quot;) + &quot;s&quot;)
+</code></pre>
+<h3 id='机试'>机试</h3>
+<ul>
+<li>表一</li>
+
+</ul>
+<figure><table>
+<thead>
+<tr><th style='text-align:right;' >会员卡号</th><th style='text-align:right;' >出生日期</th><th style='text-align:right;' >性别</th><th style='text-align:right;' >入会时间</th><th style='text-align:right;' >年龄</th><th>&nbsp;</th></tr></thead>
+<tbody><tr><td style='text-align:right;' >0</td><td style='text-align:right;' >c68b20b4</td><td style='text-align:right;' >2002/11/2 0:00</td><td style='text-align:right;' >0.0</td><td style='text-align:right;' >2013-05-11 00:00:00</td><td>20</td></tr><tr><td style='text-align:right;' >1</td><td style='text-align:right;' >0</td><td style='text-align:right;' >0</td><td style='text-align:right;' >0.0</td><td style='text-align:right;' >1970-01-01 00:00:00</td><td>0</td></tr><tr><td style='text-align:right;' >2</td><td style='text-align:right;' >a37cc182</td><td style='text-align:right;' >1967/2/17 0:00</td><td style='text-align:right;' >0.0</td><td style='text-align:right;' >2004-12-31 21:24:00</td><td>55</td></tr><tr><td style='text-align:right;' >3</td><td style='text-align:right;' >2ab88539</td><td style='text-align:right;' >1982/6/1 0:00</td><td style='text-align:right;' >0.0</td><td style='text-align:right;' >2010-11-19 00:00:00</td><td>40</td></tr><tr><td style='text-align:right;' >4</td><td style='text-align:right;' >b4c77269</td><td style='text-align:right;' >1964/2/5 0:00</td><td style='text-align:right;' >0.0</td><td style='text-align:right;' >2007-12-14 00:00:00</td><td>58</td></tr></tbody>
+</table></figure>
+<ul>
+<li>表二</li>
+
+</ul>
+<figure><table>
+<thead>
+<tr><th style='text-align:right;' >商品编码</th><th style='text-align:right;' >单价</th><th style='text-align:right;' >数量</th><th style='text-align:right;' >总金额</th><th style='text-align:right;' >消费时间</th><th>&nbsp;</th></tr></thead>
+<tbody><tr><td style='text-align:right;' >0</td><td style='text-align:right;' >2811fe0b</td><td style='text-align:right;' >180.0</td><td style='text-align:right;' >1</td><td style='text-align:right;' >180.0</td><td>2016-11-06 19:29:00</td></tr><tr><td style='text-align:right;' >1</td><td style='text-align:right;' >2811fe0b</td><td style='text-align:right;' >1080.0</td><td style='text-align:right;' >1</td><td style='text-align:right;' >1080.0</td><td>2016-11-06 19:29:00</td></tr><tr><td style='text-align:right;' >2</td><td style='text-align:right;' >2811fe0b</td><td style='text-align:right;' >1180.0</td><td style='text-align:right;' >1</td><td style='text-align:right;' >1180.0</td><td>2016-11-06 19:29:00</td></tr><tr><td style='text-align:right;' >3</td><td style='text-align:right;' >2811fe0b</td><td style='text-align:right;' >680.0</td><td style='text-align:right;' >1</td><td style='text-align:right;' >680.0</td><td>2016-11-06 19:29:00</td></tr><tr><td style='text-align:right;' >4</td><td style='text-align:right;' >2811fe0b</td><td style='text-align:right;' >880.0</td><td style='text-align:right;' >1</td><td style='text-align:right;' >880.0</td><td>2016-11-06 19:29:00</td></tr></tbody>
+</table></figure>
+<ul>
+<li>表三</li>
+
+</ul>
+<figure><table>
+<thead>
+<tr><th style='text-align:right;' >会员卡号</th><th style='text-align:right;' >消费时间</th><th style='text-align:right;' >商品编码</th><th style='text-align:right;' >数量</th><th style='text-align:right;' >单价</th><th style='text-align:right;' >总金额</th><th>&nbsp;</th></tr></thead>
+<tbody><tr><td style='text-align:right;' >0</td><td style='text-align:right;' >5bfd4a2e</td><td style='text-align:right;' >2016-05-08 11:32:00</td><td style='text-align:right;' >9096d06f</td><td style='text-align:right;' >1</td><td style='text-align:right;' >1250.0</td><td>1125.0</td></tr><tr><td style='text-align:right;' >1</td><td style='text-align:right;' >0a69471f</td><td style='text-align:right;' >2016-05-08 13:40:00</td><td style='text-align:right;' >9096d06f</td><td style='text-align:right;' >1</td><td style='text-align:right;' >1850.0</td><td>1665.0</td></tr><tr><td style='text-align:right;' >2</td><td style='text-align:right;' >0a69471f</td><td style='text-align:right;' >2016-05-08 13:40:00</td><td style='text-align:right;' >9096d06f</td><td style='text-align:right;' >1</td><td style='text-align:right;' >695.0</td><td>625.5</td></tr><tr><td style='text-align:right;' >3</td><td style='text-align:right;' >49e89b58</td><td style='text-align:right;' >2016-05-08 14:08:00</td><td style='text-align:right;' >9096d06f</td><td style='text-align:right;' >1</td><td style='text-align:right;' >1300.0</td><td>1170.0</td></tr><tr><td style='text-align:right;' >4</td><td style='text-align:right;' >49e89b58</td><td style='text-align:right;' >2016-05-08 14:08:00</td><td style='text-align:right;' >9096d06f</td><td style='text-align:right;' >1</td><td style='text-align:right;' >1400.0</td><td>1260.0</td></tr></tbody>
+</table></figure>
+<ul>
+<li>表四</li>
+
+</ul>
+<figure><table>
+<thead>
+<tr><th style='text-align:center;' >商品编码</th><th style='text-align:right;' >品牌编码</th><th style='text-align:right;' >类别编码</th><th style='text-align:right;' >进项税</th><th style='text-align:right;' >销项税</th><th style='text-align:right;' >无税进价</th><th style='text-align:right;' >含税进价</th><th style='text-align:center;' >售价</th><th>&nbsp;</th></tr></thead>
+<tbody><tr><td style='text-align:center;' >0</td><td style='text-align:right;' >ce385235</td><td style='text-align:right;' >90</td><td style='text-align:right;' >70101</td><td style='text-align:right;' >1.06</td><td style='text-align:right;' >1.06</td><td style='text-align:right;' >0.0000</td><td style='text-align:center;' >0.0</td><td>0.0</td></tr><tr><td style='text-align:center;' >1</td><td style='text-align:right;' >c34ffa55</td><td style='text-align:right;' >376</td><td style='text-align:right;' >30501</td><td style='text-align:right;' >1.17</td><td style='text-align:right;' >1.17</td><td style='text-align:right;' >0.0000</td><td style='text-align:center;' >0.0</td><td>0.0</td></tr><tr><td style='text-align:center;' >2</td><td style='text-align:right;' >3687f30e</td><td style='text-align:right;' >756</td><td style='text-align:right;' >90901</td><td style='text-align:right;' >1.17</td><td style='text-align:right;' >1.17</td><td style='text-align:right;' >545.2991</td><td style='text-align:center;' >638.0</td><td>1910.0</td></tr><tr><td style='text-align:center;' >3</td><td style='text-align:right;' >054ea853</td><td style='text-align:right;' >756</td><td style='text-align:right;' >90901</td><td style='text-align:right;' >1.17</td><td style='text-align:right;' >1.17</td><td style='text-align:right;' >179.4872</td><td style='text-align:center;' >210.0</td><td>630.0</td></tr><tr><td style='text-align:center;' >4</td><td style='text-align:right;' >28fd9c64</td><td style='text-align:right;' >375</td><td style='text-align:right;' >30501</td><td style='text-align:right;' >1.17</td><td style='text-align:right;' >1.17</td><td style='text-align:right;' >0.0000</td><td style='text-align:center;' >0.0</td><td>0.0</td></tr></tbody>
+</table></figure>
+<h1 id='python97讲'>Python97讲</h1>
+<h2 id='第三章-魔法函数'>第三章 魔法函数</h2>
+<h3 id='3-1-什么是魔法函数'>3-1 什么是魔法函数</h3>
+<pre><code class='language-python' lang='python'>class Company(object):
+    def __init__(self, employee_list):
+        self.employee = employee_list
+
+    def __getitem__(self, item):
+        return self.employee[item]
+
+company = Company([&quot;tom&quot;, &quot;bob&quot;, &quot;jane&quot;])
+
+for em in company:
+    print(em)
+</code></pre>
+<h2 id='第四章-深入类和对象'>第四章 深入类和对象</h2>
+<h3 id='4-1-鸭子类型和多态'>4-1 鸭子类型和多态</h3>
+<pre><code class='language-python' lang='python'>class Cat(object):
+    def say(self):
+        print(&quot;i am a cat&quot;)
+
+class Dog(object):
+    def say(self):
+        print(&quot;i am a dog&quot;)
+
+class Duck(object):
+    def say(self):
+        print(&quot;i am a duck&quot;)
+
+animal_list = [Cat, Dog, Duck]
+for animal in animal_list:
+    animal().say()
+    
+a = [&quot;bobby1&quot;, &quot;bobby2&quot;]
+b = [&quot;bobby2&quot;, &quot;bobby&quot;]
+name_tuple = [&quot;bobby3&quot;, &quot;bobby4&quot;]
+name_set = set()
+name_set.add(&quot;bobby5&quot;)
+name_set.add(&quot;bobby6&quot;)
+a.extend(name_tuple)
+print(a)
+</code></pre>
+<h3 id='4-2-抽象基类abc模块）'>4-2 抽象基类（abc模块）</h3>
+<pre><code class='language-python' lang='python'># 类似与于Java中的接口，不能实例化
+# 检查某个类是否有某种方法
+class Company(object):
+    def __init__(self, employee_list):
+        self.employee = employee_list
+
+    def __len__(self):
+        return len(self.employee)
+
+
+com = Company([&quot;bobby1&quot;, &quot;bobby2&quot;])
+print(hasattr(com, &quot;__len__&quot;))
+print(len(com))
+
+# 1、在某些情况下希望判断某个对象的类型
+from collections.abc import Sized
+isinstance(com, Sized)
+
+# 2、强制某个子类必须实现某些方法
+# 实现了一个web框架，集成cache(redis, cache, memorycache)
+import abc
+from collections.abc import *
+class CacheBase(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
+    def get(self, key):
+        pass
+
+    @abc.abstractmethod
+    def set(self, key, value):
+        pass
+
+class RedisCache(CacheBase):
+    pass
+redis_cache = RedisCache()
+</code></pre>
+<h3 id='4-3--isinstance-和-type-的区别'>4-3  isinstance 和 type 的区别</h3>
+<pre><code class='language-python' lang='python'>class A:
+    pass
+
+class B(A):
+    pass
+
+b = B()
+
+print(isinstance(b, B))
+print(isinstance(b, A))
+
+# is 用来判断是不是同一个对象（id(B)）；== 用来判断值是否相等
+print(type(b) is B)         # True
+print(type(b) is A)         # False
+</code></pre>
+<h3 id='4-4-类变量和实例变量'>4-4 类变量和实例变量</h3>
+<h3 id='4-5-类属性和实例属性以及查找顺序'>4-5 类属性和实例属性以及查找顺序</h3>
+<h3 id='4-7-类方法静态方法和实例方法'>4-7 类方法、静态方法和实例方法</h3>
+<pre><code class='language-python' lang='python'>class Date:
+    def __init__(self, year, month, day):
+        self.year = year
+        self.month = month
+        self.day = day
+
+    def tomorrow(self):
+        self.day += 1
+
+    @staticmethod
+    def parse_from_string(date_str):
+        year, month, day = tuple(date_str.split(&quot;-&quot;))
+        return Date(int(year), int(month), int(day))
+
+    @staticmethod
+    def valid_str(date_str):
+        year, month, day = tuple(date_str.split(&quot;-&quot;))
+        if int(year) &gt; 0 and (int(month) &gt; 0 and month &lt; 12) and 0 &lt; int(day) &lt;= 31:
+            return True
+        else:
+            return False
+
+    @classmethod
+    def from_string(cls, date_str):
+        year, month, day = tuple(date_str.split(&quot;-&quot;))
+        return cls(int(year), int(month), int(day))
+
+    def __str__(self):
+        return &quot;{year}/{month}/{day}&quot;.format(year=self.year, month=self.month, day=self.day)
+
+
+if __name__ == &quot;__main__&quot;:
+    new_day = Date(2018, 12, 31)
+    new_day.tomorrow()
+    print(new_day)
+
+    # date_str = &quot;2018-12-31&quot;
+    # year, month, date = tuple(date_str.split(&quot;-&quot;))
+    # # print(year, month, date)
+    # new_day = Date(int(year), int(month), int(day))
+    # # print(new_day)
+    date_str1 = &quot;2018-12-31&quot;
+    new_day = Date.parse_from_string(date_str1)
+</code></pre>
+<h3 id='4-7-数据封装和私有属性'>4-7 数据封装和私有属性</h3>
+<h3 id='4-10-super真的是调用父类吗'>4-10 super真的是调用父类吗？</h3>
+<pre><code class='language-python' lang='python'>class A:
+    def __init__(self) -&gt; None:
+        print(&quot;A&quot;)
+
+
+class B(A):
+    def __init__(self) -&gt; None:
+        print(&quot;B&quot;)
+        super().__init__()
+
+
+if __name__ == &quot;__main__&quot;:
+    b = B()
+</code></pre>
+<h3 id='4-12-python中的with语句'>4-12 python中的with语句</h3>
+<pre><code class='language-python' lang='python'>class Sample:
+
+    def __enter__(self):
+        print(&quot;enter&quot;)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print(&quot;exit&quot;)
+
+    def do_something(self):
+        print(&quot;doing something&quot;)
+
+
+with Sample() as sample:
+    sample.do_something()
+</code></pre>
+<h3 id='4-13-contextlib简化上下文管理器'>4-13 contextlib简化上下文管理器</h3>
+<pre><code class='language-python' lang='python'>import contextlib
+
+
+@contextlib.contextmanager
+def file_open(file_name):
+    print(&quot;file open&quot;)
+    yield {}
+    print(&quot;file end&quot;)
+
+    
+with file_open(&quot;jerry.txt&quot;) as opened:
+    print(&quot;file processing&quot;)
+</code></pre>
+<h2 id='第五章-自定义序列类'>第五章 自定义序列类</h2>
+<h3 id='5-3-list中extend方法区别'>5-3 list中extend方法区别</h3>
+<pre><code class='language-python' lang='python'>In [8]: a = [1, 2]
+
+In [9]: c = a + [3, 4]
+
+In [10]: c
+Out[10]: [1, 2, 3, 4]
+  
+In [11]: a += [3, 4]
+
+In [12]: a
+Out[12]: [1, 2, 3, 4]
+
+In [13]: range(3)
+Out[13]: range(0, 3)
+
+In [14]: a.extend(range(3))
+
+In [15]: a
+Out[15]: [1, 2, 3, 4, 0, 1, 2]
+
+In [16]: a.append([1, 2])
+</code></pre>
+<h3 id='5-4-实现可切片的对象'>5-4 实现可切片的对象</h3>
+<pre><code class='language-python' lang='python'>In [18]: alist = [3, 4, 5, 6, 7, 9, 11, 13, 15, 17]
+In [19]: alist[::]
+Out[19]: [3, 4, 5, 6, 7, 9, 11, 13, 15, 17] 
+In [20]: alist[::-1]
+Out[20]: [17, 15, 13, 11, 9, 7, 6, 5, 4, 3]
+In [21]: alist[::2]
+Out[21]: [3, 5, 7, 11, 15]
+In [22]: alist[1::2]
+Out[22]: [4, 6, 9, 13, 17]
+In [23]: alist[len(alist):] = [9]
+In [24]: alist
+Out[24]: [3, 4, 5, 6, 7, 9, 11, 13, 15, 17, 9]
+In [25]: alist[:0] = [1, 2]
+In [26]: alist
+Out[26]: [1, 2, 3, 4, 5, 6, 7, 9, 11, 13, 15, 17, 9]
+In [27]: alist[3:3] = [4]
+In [28]: alist
+Out[28]: [1, 2, 3, 4, 4, 5, 6, 7, 9, 11, 13, 15, 17, 9]
+In [31]: alist[3:] = [4, 5, 6]
+In [32]: alist
+Out[32]: [1, 2, 4, 4, 5, 6]
+In [33]: alist[::2] = [0] * 3
+In [34]: alist
+Out[34]: [0, 2, 0, 4, 0, 6]
+In [35]: alist[::2] = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
+In [36]: alist
+Out[36]: [&#39;a&#39;, 2, &#39;b&#39;, 4, &#39;c&#39;, 6]
+In [37]: del alist[:]
+In [38]: alist
+Out[38]: []
+</code></pre>
+<pre><code class='language-python' lang='python'>import numbers
+
+
+class Group:
+    def __init__(self, group_name, company_name, staffs):
+        self.group_name = group_name
+        self.company_name = company_name
+        self.staffs = staffs
+
+    def __reversed__(self):
+        self.staffs.reverse()
+
+    def __getitem__(self, item):
+        # return self.staffs[item]
+        cls = type(self)
+        if isinstance(item, slice):
+            return cls(group_name=self.group_name,
+                       company_name=self.company_name,
+                       staffs=self.staffs[item])
+        elif isinstance(item, numbers.Integral):
+            return cls(group_name=self.group_name,
+                       company_name=self.company_name,
+                       staffs=[self.staffs[item]])
+
+    def __len__(self):
+        return len(self.staffs)
+
+    def __iter__(self):
+        return iter(self.staffs)
+
+    def __contains__(self, item):
+        if item in self.staffs:
+            return True
+        else:
+            return False
+
+
+staffs = [&quot;bobby1&quot;, &quot;bobby2&quot;, &quot;bobby3&quot;]
+group = Group(company_name=&quot;imooc&quot;, group_name=&quot;user&quot;, staffs=staffs)
+
+sub_group = group[:2]
+print(group[0])
+if &quot;bobby1&quot; in group:
+    print(&quot;YES&quot;)
+for user in group:
+    print(user)
+reversed(group)
+</code></pre>
+<h3 id='5-5-bisect维护已排序序列'>5-5 bisect维护已排序序列</h3>
+<pre><code class='language-pyhton' lang='pyhton'>import bisect
+from collections import deque
+
+# 用来处理已排序的序列
+# 二分查找
+inter_list = deque()
+
+bisect.insort(inter_list, 3)
+bisect.insort(inter_list, 2)
+bisect.insort(inter_list, 5)
+bisect.insort(inter_list, 1)
+bisect.insort(inter_list, 6)
+
+print(bisect.bisect(inter_list, 3))
+print(inter_list)
+</code></pre>
+<h3 id='5-6-什么时候我们不该用列表'>5-6 什么时候我们不该用列表</h3>
+<pre><code class='language-python' lang='python'>import array
+my_array = array.array(&quot;i&quot;)
+my_array.append(1)
+my_array.append(5)
+</code></pre>
+<h3 id='5-7-列表推导式生成器表达式字典推导式'>5-7 列表推导式、生成器表达式、字典推导式</h3>
+<pre><code class='language-python' lang='python'>[i * i for i in range(20) if i % 2 == 1]
+(i * i for i in range(20) if i % 2 == 1)			# 生成器
+list((i * i for i in range(20) if i % 2 == 1))
+
+my_dict = {&quot;bobby1&quot;: 22, &quot;bobby2&quot;: 23, &quot;imooc.com&quot;: 5}
+reversed_dict = {value:key for key, value in my_dict.items()}
+
+my_set = {key for key, value in my_dict.items()}
+type(my_set)			# out: set
+my_set = set(my_dict.keys())
+</code></pre>
+<h2 id='第六章-深入python的set和dict'>第六章 深入python的set和dict</h2>
+<h3 id='6-1-dict的abc继承关系'>6-1 dict的abc继承关系</h3>
+<pre><code class='language-python' lang='python'>from collections import Mapping, MutableMapping
+a = {}
+isinstance(a, MutableMapping)
+</code></pre>
+<h3 id='6-2-dict的常用方法'>6-2 dict的常用方法</h3>
+<pre><code class='language-python' lang='python'>a = {
+     &quot;bobby1&quot;:{&quot;company&quot;: &quot;imooc&quot;},
+     &quot;bobby2&quot;:{&quot;company&quot;: &quot;imooc2&quot;},
+     &quot;bobby3&quot;:{&quot;company&quot;: &quot;imooc3&quot;}
+     }
+a.clear()
+# 浅拷贝
+new_dict = a.copy()
+new_dict[&quot;bobby1&quot;][&quot;company&quot;] = &quot;imooc4&quot;
+# 深拷贝
+new_dict = copy.deepcopy(a)
+new_dict[&quot;bobby1&quot;][&quot;company&quot;] = &quot;imooc4&quot;
+
+new_list = [&quot;a&quot;, &quot;b&quot;]
+new_dict = dict.fromkeys(new_list, {&quot;company&quot;: &quot;imooc&quot;})
+
+value = new_dict.get(&quot;bobby&quot;, {})
+
+for key, value in new_dict.items():
+     print(key, value)
+    
+new_dict.setdefault(&quot;bobby&quot;, &quot;imooc&quot;)
+new_dict.update({&quot;bobby2&quot;: &quot;imooc&quot;})
+new_dict.update(bob=&quot;imooc&quot;)
+new_dict.update([(&quot;cv&quot;, &quot;ml&quot;)])
+new_dict.update(((&quot;cv1&quot;, &quot;ml1&quot;),))
+</code></pre>
+<h3 id='6-3-dict的子类'>6-3 dict的子类</h3>
+<pre><code class='language-python' lang='python'>class Mydict(dict):
+    def __setitem__(self, key, value):
+        super().__setitem__(key, value*2)
+
+my_dict = Mydict(one=1)
+my_dict[&quot;one&quot;] = 1
+my_dict
+</code></pre>
+<pre><code class='language-python' lang='python'>from collections import UserDict
+class MyDict(UserDict):
+    def __setitem__(self, key, value):
+        super().__setitem__(key, value*2)
+
+my_dict = MyDict(one=1)
+# my_dict[&quot;one&quot;] = 1
+my_dict
+</code></pre>
+<pre><code class='language-python' lang='python'>from collections import defaultdict
+my_dict = defaultdict(dict)
+my_value = my_dict[&quot;bobby&quot;]
+</code></pre>
+<h3 id='6-4-set和frozenset'>6-4 set和frozenset</h3>
+<pre><code class='language-python' lang='python'>In [85]: s = set(&#39;abcde&#39;)
+In [86]: s
+Out[86]: {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;}
+In [87]: s = set([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;])
+In [88]: s
+Out[88]: {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;}
+In [89]: s = {&#39;a&#39;, &#39;b&#39;}
+In [91]: type(s)
+Out[91]: set
+In [92]: s = frozenset(&quot;abcde&quot;)
+In [93]: s
+Out[93]: frozenset({&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;})  
+In [95]: s.add(&#39;c&#39;)
+In [96]: s
+Out[96]: {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;}
+In [97]: another_set = set(&quot;def&quot;)
+In [98]: s.update(another_set)
+In [99]: s
+Out[99]: {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;}
+
+</code></pre>
+<h2 id='第八章-元类编程'>第八章 元类编程</h2>
+<h3 id='8-1-property动态属性'>8-1 property动态属性</h3>
+<pre><code class='language-python' lang='python'>from datetime import date, datetime
+
+
+class User:
+    def __init__(self, name, birthday):
+        self.name = name
+        self.birthday = birthday
+        self._age = 0
+
+    # def get_age(self):
+    #     return datetime.now().year - self.birthday.year
+
+    @property
+    def age(self):
+        return datetime.now().year - self.birthday.year
+
+    @age.setter
+    def age(self, value):
+        self._age = value
+
+
+if __name__ == &quot;__main__&quot;:
+    user = User(&quot;Jerry&quot;, date(1998, month=10, day=5))
+    # print(&quot;in {} file&quot;.format(__file__))
+    # user.get_age()
+    user.age = 30
+    print(user._age)
+    print(user.age)
+</code></pre>
+<h3 id='8-2-getattr和getattribute魔法函数'>8-2 getattr和getattribute魔法函数</h3>
+<pre><code class='language-python' lang='python'>from datetime import date
+
+
+class User:
+    def __init__(self, name, birthday, info={}):
+        self.name = name
+        self.birthday = birthday
+        self.info = info
+
+    def __getattr__(self, item):
+        return self.info[item]
+      
+    def __getattribute__(self, item):
+        return &quot;Jerry&quot;
+
+
+if __name__ == &quot;__main__&quot;:
+    user = User(&quot;Jerry&quot;, date(1998, month=10, day=5), info={&quot;company_name&quot;:&quot;imooc&quot;})
+    print(user.company_name)
+</code></pre>
+<h3 id='8-3-属性描述符和属性查找过程'>8-3 属性描述符和属性查找过程</h3>
+<pre><code class='language-python' lang='python'>import numbers
+
+
+class IntField:
+    def __get__(self, instance, owner):
+        return self.value
+
+    def __set__(self, instance, value):
+        if not isinstance(value, numbers.Integral):
+            raise ValueError(&quot;int value need&quot;)
+        self.value = value
+
+    def __delete__(self, instance):
+        pass
+
+
+class User:
+    age = IntField()
+
+
+if __name__ == &quot;__main__&quot;:
+    user = User()
+    user.age = 30
+    print(user.age)
+</code></pre>
+<h3 id='8-4-new和init的区别'>8-4 new和init的区别</h3>
+<pre><code class='language-python' lang='python'>class User:
+    def __new__(cls, *args, **kwargs):
+        print(&quot;in new&quot;)
+        return super().__new__(cls)
+
+    def __init__(self, name):
+        print(&quot;in init&quot;)
+        self.name = name
+
+
+if __name__ == &quot;__main__&quot;:
+    user = User(name=&quot;Jerry&quot;)
+    print(user.name)
+</code></pre>
+<h3 id='8-5-自定义元类'>8-5 自定义元类</h3>
+<ul>
+<li>元类是创建类的类</li>
+
+</ul>
+<pre><code class='language-python' lang='python'>def create_class(name):
+    if name == &quot;user&quot;:
+        class User:
+            def __str__(self):
+                return &quot;user&quot;
+        return User
+    elif name == &quot;company&quot;:
+        class Company:
+            def __str__(self):
+                return &quot;company&quot;
+        return Company
+
+
+def say(self):
+    return &quot;i am user&quot;
+
+
+class BaseClass:
+    def answer(self):
+        return &quot;i am base class&quot;
+
+
+if __name__ == &quot;__main__&quot;:
+    # MyClass = create_class(&quot;user&quot;)
+    # my_obj = MyClass()
+    # print(my_obj)
+    User = type(&quot;User&quot;, (BaseClass,), {&quot;name&quot;: &quot;user&quot;, &quot;say&quot;: say})
+    my_obj = User()
+    print(my_obj.answer())
+</code></pre>
+<pre><code class='language-python' lang='python'>class MetaClass(type):
+    def __new__(cls, *args, **kwargs):
+        return super().__new__(cls, *args, **kwargs)
+
+
+class User(metaclass=MetaClass):
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return &quot;user&quot;
+
+
+if __name__ == &quot;__main__&quot;:
+    my_obj = User(name=&quot;Jerry&quot;)
+    print(my_obj)
+</code></pre>
+<h2 id='第九章-迭代器和生成器'>第九章 迭代器和生成器</h2>
+<h3 id='91-python的迭代协议'>9.1 python的迭代协议</h3>
+<pre><code class='language-python' lang='python'>from collections.abc import Iterable, Iterator
+
+a = [1, 2]
+iter_rator = iter(a)
+print(isinstance(a, Iterable))
+print(isinstance(iter_rator, Iterator))
+</code></pre>
+<h3 id='9-2-什么是迭代器和可迭代对象'>9-2 什么是迭代器和可迭代对象</h3>
+<pre><code class='language-python' lang='python'>from collections.abc import Iterable, Iterator
+
+
+class Company:
+    def __init__(self, employee_list):
+        self.employee = employee_list
+
+    def __iter__(self):
+        return MyIterator(self.employee)
+
+    # def __getitem__(self, item):
+    #     return self.employee[item]
+
+
+class MyIterator(Iterator):
+    # def __iter__(self):
+    #     return self
+    def __init__(self, employee_list):
+        self.iter_list = employee_list
+        self.index = 0
+    
+    def __next__(self):
+        try:
+            word = self.iter_list[self.index]
+        except IndexError:
+            raise StopIteration
+        self.index += 1
+        return word
+        
+
+if __name__ == &quot;__main__&quot;:
+    company = Company([&quot;tom&quot;, &quot;bob&quot;, &quot;jane&quot;])
+    my_iter = iter(company)
+    print(next(my_iter))
+
+</code></pre>
+<h3 id='9-6-生成器如何读取大文件'>9-6 生成器如何读取大文件</h3>
+<pre><code class='language-python' lang='python'># f = open()
+# for line in f:
+#     pass
+# f.readlines()
+# f.read(4096)
+
+
+def myreadlines(f, newline):
+    buf = &quot;&quot;
+    while True:
+        while newline in buf:
+            pos = buf.index(newline)
+            yield buf[:pos]
+            buf = buf[pos + len(newline):]
+        chunk = f.read(4096)
+        if not chunk:
+            yield buf
+            break
+        buf += chunk
+
+
+with open(&quot;input.txt&quot;) as f:
+    for line in myreadlines(f, &quot;{|}&quot;):
+        print(line)
+
+</code></pre>
+<h2 id='第十一章-多线程多进程和线程池编程'>第十一章 多线程、多进程和线程池编程</h2>
+<h3 id='11-2-多线程编程'>11-2 多线程编程</h3>
+<pre><code class='language-python' lang='python'>import threading
+import time
+
+
+def get_detail_html(url):
+    print(&quot;get detail html started&quot;)
+    time.sleep(2)
+    print(&quot;get detail html end&quot;)
+
+
+def get_detail_url(url):
+    print(&quot;get detail url started&quot;)
+    time.sleep(4)
+    print(&quot;get detail url end&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    thread1 = threading.Thread(target=get_detail_html, args=(&quot;&quot;,))
+    thread2 = threading.Thread(target=get_detail_url, args=(&quot;&quot;,))
+    # thread1.setDaemon(True)
+    # thread2.setDaemon(True)
+    start_time = time.time()
+    thread1.start()
+    thread2.start()
+
+    thread1.join()
+    thread2.join()
+
+    print(&quot;last time: {}&quot;.format(time.time() - start_time))
+
+</code></pre>
+<pre><code class='language-python' lang='python'>import threading
+import time
+
+
+class GetDetailHtml(threading.Thread):
+    def __init__(self, name):
+        super().__init__(name=name)
+
+    def run(self):
+        print(&quot;get detail html started&quot;)
+        time.sleep(2)
+        print(&quot;get detail html end&quot;)
+
+
+class GetDetailUrl(threading.Thread):
+    def __init__(self, name):
+        super().__init__(name=name)
+
+    def run(self):
+        print(&quot;get detail url started&quot;)
+        time.sleep(4)
+        print(&quot;get detail url end&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    thread1 = GetDetailHtml(&quot;get_detail_html&quot;)
+    thread2 = GetDetailUrl(&quot;get_detail_url&quot;)
+    start_time = time.time()
+    thread1.start()
+    thread2.start()
+    thread1.join()
+    thread2.join()
+    print(&quot;last time: {}&quot;.format(time.time() - start_time))
+</code></pre>
+<h2 id='第十二章-协程和异步io'>第十二章 协程和异步io</h2>
+<h3 id='12-7-生成器进阶---sendclose和throw方法--yield-from'>12-7 生成器进阶—send、close和throw方法 / yield from</h3>
+<pre><code class='language-python' lang='python'>def gen_func():
+    html = yield &quot;http://projectsedu.com&quot;
+    print(html)
+    yield 2
+    yield 3
+    return &quot;bobby&quot;
+
+
+if __name__ == &quot;__main__&quot;:
+    gen = gen_func()
+    url = next(gen)
+    # url = gen.send(None)
+    html = &quot;bobby&quot;
+    gen.send(html)
+    print(url)
+
+</code></pre>
+<pre><code class='language-python' lang='python'>gen.close()
+gen.throw(Exception, &quot;download error&quot;)
+</code></pre>
+<pre><code class='language-python' lang='python'>from itertools import chain
+
+my_list = [1, 2, 3]
+my_dict = {
+    &quot;a&quot;: &quot;sdfdsg&quot;,
+    &quot;b&quot;: &quot;3rtgeraw&quot;,
+}
+
+def my_chain(*args, **kwargs):
+    for my_iterable in args:
+      	# for value in my_iterable:
+        #     yield value
+      	yield from my_iterable
+
+for value in chain(my_list, my_dict, range(5, 10)):
+    print(value)
+</code></pre>
+<pre><code class='language-python' lang='python'>def g1(iterable):
+    yield iterable
+    
+def g2(iterable):
+    yield from iterable
+
+for value in g1(range(10)):
+    print(value)
+    
+for value in g2(range(10)):
+    print(value)
+</code></pre>
+<h3 id='12-10-async和await'>12-10 async和await</h3>
+<pre><code class='language-python' lang='python'>async def downloader(url):
+    return &quot;Jerry&quot;
+
+
+async def download_url(url):
+    html = await downloader(url)
+    return html
+
+if __name__ == &quot;__main__&quot;:
+    coro = download_url(&quot;https://www.imooc.com&quot;)
+    coro.send(None)
+
+</code></pre>
+<h2 id='第十三章-asyncio并发编程'>第十三章 asyncio并发编程</h2>
+<h3 id='13-1-事件循环'>13-1 事件循环</h3>
+<pre><code class='language-python' lang='python'>import asyncio
+import time
+
+
+async def get_html(url):
+    print(&quot;start get url&quot;)
+    # time.sleep(2)
+    await asyncio.sleep(2)
+    print(&quot;end get url&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    start_time = time.time()
+    loop = asyncio.get_event_loop()
+    # loop.run_until_complete(get_html(&quot;https://baidu.com&quot;))
+    tasks = [get_html(&quot;https://baidu.com&quot;) for i in range(10)]
+    # loop.run_until_complete(asyncio.gather(*tasks))
+    loop.run_until_complete(asyncio.wait(tasks))
+    print(time.time() - start_time)
+
+</code></pre>
+<pre><code class='language-python' lang='python'>import asyncio
+import time
+from functools import partial
+
+
+async def get_html(url):
+    print(&quot;start get url&quot;)
+    # time.sleep(2)
+    await asyncio.sleep(2)
+    return &quot;Jerry&quot;
+
+
+def callback(url, future):
+    print(url)
+    print(&quot;send email to Jerry&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    start_time = time.time()
+    loop = asyncio.get_event_loop()
+    # get_future = asyncio.ensure_future(get_html(&quot;https://baidu.com&quot;))
+    # loop.run_until_complete(get_future)
+    task = loop.create_task(get_html(&quot;https://baidu.com&quot;))
+    task.add_done_callback(partial(callback, &quot;https://baidu.com&quot;))
+    loop.run_until_complete(task)
+    print(task.result())
+
+</code></pre>
+<h3 id='13-3-task取消和子协程调用原理'>13-3 task取消和子协程调用原理</h3>
+<pre><code class='language-python' lang='python'>import asyncio
+loop = asyncio.get_event_loop()
+loop.run_forever()
+loop.run_until_complete()
+</code></pre>
+<pre><code class='language-python' lang='python'>import asyncio
+import time
+
+
+async  def get_html(sleep_times):
+    print(&quot;waiting&quot;)
+    await asyncio.sleep(sleep_times)
+    print(&quot;done after {}s&quot;.format(sleep_times))
+
+
+if __name__ == &quot;__main__&quot;:
+    task1 = get_html(2)
+    task2 = get_html(3)
+    task3 = get_html(3)
+
+    tasks = [task1, task2, task3]
+
+    loop = asyncio.get_event_loop()
+
+    try:
+        loop.run_until_complete(asyncio.wait(tasks))
+    except KeyboardInterrupt as e:
+        all_tasks = asyncio.Task.all_tasks()
+        for task in all_tasks:
+            print(&quot;cancel task&quot;)
+            print(task.cancel())
+        loop.stop()
+        loop.run_forever()
+    finally:
+        loop.close()
+
+</code></pre>
+<h3 id='13-4-callsooncallatcalllatercallsoonthreadsafe'>13-4 call_soon、call_at、call_later、call_soon_threadsafe</h3>
+<pre><code class='language-python' lang='python'>import asyncio
+
+
+def callback(sleep_times):
+    print(&quot;sleep {} success&quot;.format(sleep_times))
+
+
+def stoploop(loop):
+    loop.stop()
+
+
+if __name__ == &quot;__main__&quot;:
+    loop = asyncio.get_event_loop()
+    loop.call_later(2, callback, 2)
+    loop.call_later(3, callback, 3)
+    loop.call_later(1, callback, 1)
+    # loop.call_soon(stoploop, loop)
+    loop.run_forever()
+
+</code></pre>
+<h1 id='python进阶'>Python进阶</h1>
+<h2 id='第二章-数据结构与算法相关问题与解决技巧'>第二章 数据结构与算法相关问题与解决技巧</h2>
+<h3 id='2-1-如何在列表字典集合中根据条件筛选数据'>2-1 如何在列表、字典、集合中根据条件筛选数据</h3>
+<ul>
+<li>列表</li>
+
+</ul>
+<p>列表解析：[x for x in data if x&gt;=0]</p>
+<p>filter函数：filter(lambda x: x&gt;=0, data)</p>
+<ul>
+<li>字典</li>
+
+</ul>
+<p>字典解析：{k:v for k,v in d.items() if v&gt;90} </p>
+<ul>
+<li>集合</li>
+
+</ul>
+<p>集合解析：{x for x in s if x%3==0}</p>
+<pre><code class='language-python' lang='python'>from random import randint
+# 列表解析
+l = [randint(-10, 10) for _ in range(10)]
+[x for x in l if x &gt;= 0]
+# filter函数
+g = filter(lambda x: x &gt;= 0, l)
+next(g)
+list(g)
+# 字典解析
+d = {&#39;student%d&#39; %i: randint(50, 100) for i in range(1, 20)}
+{k:v for k, v in d.items() if v &gt;= 90}
+g = filter(lambda item: item[1] &gt;= 90, d.items())
+list(g)
+dict(g)
+# 集合解析
+s = {randint(0, 20) for _ in range(20)}
+{x for x in s if x % 3 == 0}
+</code></pre>
+<h3 id='2-2-如何为元组中的每个元素命名-提高程序可读性'>2-2 如何为元组中的每个元素命名, 提高程序可读性</h3>
+<ul>
+<li>方案1：定义一系列数值常量或枚举类型</li>
+<li>方案2：使用标准库中collections.namedtuple代替内置tuple</li>
+
+</ul>
+<pre><code class='language-python' lang='python'># 定义数值常量
+# NAME = 0
+# AGE = 1
+# SEX = 2
+# EMAIL = 3
+NAME, AGE, SEX, EMAIL = range(4)
+def xxx_func(student):
+  if student[AGE] &lt; 18:
+		pass
+	if student[SEX] == &#39;male&#39;:
+		pass
+	# ...
+student = (&#39;Jim&#39;, 16, &#39;male&#39;, &#39;jim8721@gmail.com&#39;)
+xxx_func(student)
+
+#使用枚举
+from enum import IntEnum
+class StudentEnum(IntEnum):
+  NAME = 0
+  AGE = 1
+  SEX = 2
+  EMAIL = 3
+StudenEnum.NAME
+s[StudentEnum.NAME]
+isinstance(StudentEnum.NAME, int)
+StudentEnum.NAME == 0
+
+# 
+from collections import namedtuple
+Student = namedtuple(&#39;Student&#39;, [&#39;name&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;email&#39;])
+s2 = Student(&#39;Jim&#39;, 16, &#39;male&#39;, &#39;jim8721@gmail.com&#39;)
+s2
+isinstance(s2, tuple)
+s2[0]
+s2.name
+</code></pre>
+<h3 id='2-3-如何根据字典中值的大小-对字典中的项排序'>2-3 如何根据字典中值的大小, 对字典中的项排序</h3>
+<p>将字典中的各项转换为元组，使用内置函数sorted排序</p>
+<ul>
+<li>方案1：将字典中的项转化为（值，键）元组。（列表解析或zip）</li>
+<li>方案2：传递sorted函数的key参数</li>
+
+</ul>
+<pre><code class='language-python' lang='python'>(3, 2) &gt; (1, 4)			# true
+# 列表解析
+from random import randint
+d = {k: randint(60, 100) for k in &#39;abcdefgh&#39;}
+										# {&#39;a&#39;: 87, &#39;b&#39;: 71, &#39;c&#39;: 99, &#39;d&#39;: 77, &#39;e&#39;: 97, &#39;f&#39;: 99, &#39;g&#39;: 60, &#39;h&#39;: 97}
+l = [(v, k) for k, v in d.items()]
+sorted(l)
+sorted(l, reverse=True)
+# zip
+list(zip([1,2,3],[4,5,6]))
+list(zip(d.values(), d.keys()))
+# 方案2
+d.items()					  # dict_items([(&#39;a&#39;, 87), (&#39;b&#39;, 71), (&#39;c&#39;, 99), (&#39;d&#39;, 77), (&#39;e&#39;, 97), (&#39;f&#39;, 99), (&#39;g&#39;, 60), (&#39;h&#39;, 97)])
+p = sorted(d.items(), key=lambda item: item[1], reverse=True)
+p
+d
+enumerate(p)
+list(enumerate(p))
+list(enumerate(p, 1))
+# for i, (k, v) in enumerate(p, 1):
+#   d[k] = (i, v)
+# d
+{k:(i, v) for i, (k, v) in enumerate(p, 1)}
+</code></pre>
+<h3 id='2-4-如何统计序列中元素的频度'>2-4 如何统计序列中元素的频度</h3>
+<ul>
+<li>实际案例</li>
+
+</ul>
+<p>1、某随机序列 [12,5,6,4,6,5,5,7]中，找到出现次数最高的 3个元素，它们出现次数是多少？</p>
+<p>2、对某英文文章的单词，进行词频统计，找到出现次数最高的 10个单词，它们出现次数是多少？</p>
+<ul>
+<li>解决方案</li>
+
+</ul>
+<p>方案1：将序列转换为字典{元素：频度}，根据字典中的值排序。</p>
+<pre><code class='language-python' lang='python'>from random import randint
+data = [randint(0, 20) for _ in range(30)]
+d = dict.fromkeys(data, 0)
+for x in data:
+  d[x] += 1
+d
+# {19: 1,
+#  3: 1,
+#  13: 4,
+#  20: 3,
+#  4: 2,
+#  17: 2,
+#  16: 3,
+#  18: 4,
+#  0: 2,
+#  7: 2,
+#  8: 1,
+#  11: 2,
+#  14: 2,
+#  9: 1}
+sorted([(v, k) for k, v in d.items()], reverse=True)				# 列表解析
+sorted([(v, k) for k, v in d.items()], reverse=True)[:3]
+sorted(((v, k) for k, v in d.items()), reverse=True)[:3]		# 生成器解析
+import heapq
+heapq.nlargest(3, ((v, k) for k, v in d.items()))
+</code></pre>
+<ul>
+<li>方案2：使用标准库collections中的Counter对象</li>
+
+</ul>
+<pre><code class='language-python' lang='python'>from collections import Counter
+data
+c = Counter(data)
+c.most_common(3)
+</code></pre>
+<pre><code class='language-python' lang='python'>txt = oprn(&#39;example.txt&#39;).read()
+import re
+word_list = re.split(&#39;\W+&#39;, txt)
+c2 = Counter(word_list)
+c2.most_common(10)
+</code></pre>
+<h3 id='2-5-如何快速找到多个字典中的公共键key'>2-5 如何快速找到多个字典中的公共键(key)</h3>
+<ul>
+<li>实际案例</li>
+
+</ul>
+<p>西班牙足球联赛。每轮球员进球统计：</p>
+<p>第1轮：{&#39;苏亚雷斯&#39;:1, &#39;梅西&#39;:2, &#39;本泽马&#39;:1, ...}
+第2轮：{&#39;苏亚雷斯&#39;:2, &#39;C罗&#39;:1, &#39;格里兹曼&#39;:2, ...}
+第3轮：{&#39;苏亚雷斯&#39;:1, &#39;托雷斯&#39;:1, &#39;贝尔&#39;:1, ...}</p>
+<p>统计出前N轮，每场比赛都有进球的球员。</p>
+<pre><code class='language-python' lang='python'>from random import randint, sample
+sample(&#39;abcdefgh&#39;, 3)
+sample(&#39;abcdefgh&#39;, randint(3, 6))
+d1 = {k: randint(1, 4) for k in sample(&#39;abcdefgh&#39;, randint(3, 6))}
+d2 = {k: randint(1, 4) for k in sample(&#39;abcdefgh&#39;, randint(3, 6))}
+d3 = {k: randint(1, 4) for k in sample(&#39;abcdefgh&#39;, randint(3, 6))}
+# for k in d1:
+#   if k in d2 and k in d3:
+#     print(k)
+[k for k in d1 if k in d2 and k in d3]
+dl = [d1, d2, d3]
+[k for k in dl[0] if all(map(lambda d: k in d, dl[1:]))]
+</code></pre>
+<ul>
+<li>利用集合的交集操作</li>
+
+</ul>
+<p>Step1：使用字典的keys0 方法，得到一个字典 keys 的集合．
+Step2：使用map 函数，得到每个字典keys 的集合．
+Step3：使用reduce 函数，取所有字典的keys 集合的交集．</p>
+<pre><code class='language-python' lang='python'>s1 = d1.keys()			# 等价于dict.keys(d1)
+s2 = d1.keys()
+s1 &amp; s2
+from functools import reduce
+reduce(lambda a, b: a * b, range(1, 11))
+list(map(dict.keys, dl))
+reduce(lambda a, b: a &amp; b,map(dict.keys, dl))
+</code></pre>
+<h3 id='2-6-如何让字典保持有序'>2-6 如何让字典保持有序</h3>
+<p>使用标准库collections中的OrderedDict</p>
+<pre><code class='language-python' lang='python'>d = {}
+d[&#39;c&#39;] = 1
+d[&#39;b&#39;] = 2
+d[&#39;a&#39;] = 3
+d.keys()
+list(iter(d))
+from collections import OrderedDict
+od = OrderedDict()
+od[&quot;c&quot;] = 1
+od[&quot;b&quot;] = 2
+od[&quot;a&quot;] = 3
+od.keys()
+players = list(&#39;abcdefg&#39;)
+from random import shuffle
+shuffle(players)
+players
+od = OrderedDict()
+for i, p in enumerate(players, 1):
+     od[p] = i
+od
+def query_by_name(d, name):
+     return d[name]
+query_by_name(od, &#39;c&#39;)
+from itertools import islice
+list(islice(range(10), 3, 6))
+list(islice(od, 3, 6))
+def query_by_order(d, a, b=None):
+     a -= 1
+     if b is None:
+         b = a + 1
+     return list(islice(od, a, b))
+od
+# OrderedDict([(&#39;a&#39;, 1),
+#              (&#39;e&#39;, 2),
+#              (&#39;f&#39;, 3),
+#              (&#39;d&#39;, 4),
+#              (&#39;g&#39;, 5),
+#              (&#39;c&#39;, 6),
+#              (&#39;b&#39;, 7)])
+query_by_order(od, 4)
+query_by_order(od, 3, 6)
+</code></pre>
+<h3 id='2-7-如何实现用户的历史记录功能最多n条'>2-7 如何实现用户的历史记录功能(最多n条)</h3>
+<pre><code class='language-python' lang='python'># 猜数游戏
+
+from random import randint
+from collections import deque
+
+def guess(n, k):
+    if n == k:
+        print(&quot;猜对了，这个数字是%d.&quot; % k)
+        return True
+
+    if n &lt; k:
+        print(&quot;猜大了，比%d小&quot; % k)
+    elif n &gt; k:
+        print(&quot;猜大了，比%d大&quot; % k)
+    return False
+
+def main():
+    n = randint(1, 100)
+    i = 1
+    hq = deque([], 5)
+    while True:
+        line = input(&quot;[%d]请输入一个数字：&quot; % i)
+        if line.isdigit():
+            k = int(line)
+            hq.append(k)
+            i += 1
+            if guess(n, k):
+                break
+        elif line == &quot;quit&quot;:
+            break
+        elif line == &quot;h?&quot;:
+            print(list(hq))
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<pre><code class='language-python' lang='python'>from collections import deque
+q = deque([], 5)
+# q.append() | q.appendleft()
+# q.pop() | q.popleft()
+q.append(1)
+q.append(2)
+q.append(3)
+q.append(4)
+q.append(5)
+q
+
+import pickle
+pickle.dump
+pickle.dump(q, open(&quot;save.pkl&quot;, &quot;wb&quot;))
+ed save.pkl
+q2 = pickle.load(open(&#39;save.pkl&#39;, &#39;rb&#39;))
+q2
+</code></pre>
+<h3 id='2-8-如何在列表-字典-集合中根据条件筛选数据'>2-8 如何在列表, 字典, 集合中根据条件筛选数据</h3>
+<pre><code class='language-python' lang='python'>data = [1, 5, -3, -2, 6, 0, 9]
+
+res = []
+for x in data:
+    if x &gt;= 0:
+        res.append(x)
+        
+print res
+</code></pre>
+<p><img src="/Users/wjy/Documents/Typora/插入图片/python/截屏2022-04-18 21.20.58.png" referrerpolicy="no-referrer" alt="截屏2022-04-18 21.20.58"></p>
+<pre><code class='language-python' lang='python'>from random import randint
+data = [randint(-10, 10) for _ in range(10)]
+filter(lambda x: x &gt;= 0, data)
+[x for x in data if x &gt;= 0]
+timeit filter(lambda x: x &gt;= 0, data)
+timeit [x for x in data if x &gt;= 0]
+
+d = {x: randint(60, 100) for x in range(1, 21)}
+{k: v for k, v in d.items() if v &gt; 90}
+
+s = set(data)
+s
+{x for x in s if x % 3 == 0}
+</code></pre>
+<h2 id='第三章-复杂场景下字符串处理相关问题与解决技巧'>第三章 复杂场景下字符串处理相关问题与解决技巧</h2>
+<h3 id='3-1-如何拆分含有多种分隔符的字符串'>3-1 如何拆分含有多种分隔符的字符串</h3>
+<pre><code class='language-python' lang='python'># 方法一：连续使用str.split()方法
+s = &#39;ab;cd|efg|hi,jkl|mn\topq;rst,uvw\txyz&#39;
+s.split(&#39;;&#39;)
+[[&#39;ab&#39;], [&#39;cd&#39;, &#39;efg&#39;, &#39;hi,jkl&#39;, &#39;mn\topq&#39;], [&#39;rst,uvw\txyz&#39;]]
+list(map(lambda ss: ss.split(&#39;|&#39;), s.split(&#39;;&#39;)))
+
+t = []
+t.extend([1, 2, 3])
+t.extend([4, 5, 6])
+t
+
+t = []
+list(map(t.extend, [ss.split(&quot;|&quot;) for ss in s.split(&quot;;&quot;)]))
+t
+
+sum([ss.split(&quot;|&quot;) for ss in s.split(&quot;;&quot;)], [])
+
+def my_split(s, seps):
+    res = [s]
+    for sep in seps:
+        t = []
+        list(map(lambda ss: t.extend(ss.split(sep)), res))                   
+        res = t
+    return res
+my_split(s, &quot;,;|\t&quot;)
+
+reduce(lambda l, sep: sum(map((lambda ss: ss.split(sep)), l), []), &quot;,;|\t&quot;, [s])
+my_split2 = lambda s, seps: reduce(lambda l, sep: sum(map((lambda ss: ss.split(sep)), l), []),seps , [s])
+my_split2(s, &#39;,;|\t&#39;)
+</code></pre>
+<pre><code class='language-python' lang='python'># 方法二：使用正则表达式的re.split()方法
+import re
+re.split(&quot;[;,|\t]+&quot;, s)
+</code></pre>
+<h3 id='3-2-如何判断字符串a是否以字符串b开头或结尾'>3-2 如何判断字符串a是否以字符串b开头或结尾</h3>
+<pre><code class='language-python' lang='python'>fn = &quot;aaa.py&quot;
+fn.endswith(&#39;.py&#39;)
+fn.endswith((&#39;.py&#39;, &#39;.sh&#39;))
+ls
+import os
+d = os.listdir(&#39;.&#39;)
+s = os.stat(&#39;b.py&#39;)
+# os.stat_result(
+# st_mode=33188, 
+# st_ino=21277347, 
+# st_dev=16777230, 
+# st_nlink=1, 
+# st_uid=501, 
+# st_gid=20, 
+# st_size=968, 
+# st_atime=1644302250, 
+# st_mtime=1644302250, 
+# st_ctime=1645689542
+# )
+s.st_mode
+ls -l b.py
+# -rw-r--r--  1 wjy  staff  968  2  8 14:37 b.py
+# User|RWX  Group|RWX  Other|RWX
+oct(s.st_mode)
+# &#39;0o100644&#39;
+oct(s.st_mode | 0o100)
+os.chmod(&#39;b.py&#39;, s.st_mode | 0o100)
+ll
+import stat
+stat.S_IXUSR
+for fn in os.listdir():
+  if fn.endswith((&#39;.py&#39;, &#39;.sh&#39;)):
+    fs = os.stat(fn)
+    os.chmod(fn, fs.st_mode | stat.S_IXUSR)
+ll
+</code></pre>
+<h3 id='3-3-如何调整字符串中文本的格式'>3-3 如何调整字符串中文本的格式</h3>
+<pre><code class='language-python' lang='python'>f = open(&#39;/var/log/dpkg.log.1&#39;)
+log = f.read()
+log
+print(log)
+
+import re
+# re.sub(p, r, s)
+print(re.sub(r&#39;(\d{4})-(\d{2})-(\d{2})&#39;, r&#39;\2/\3/\1&#39;, log))
+print(re.sub(r&#39;(?P&lt;year&gt;\d{4})-(?P&lt;month&gt;\d{2})-(?P&lt;day&gt;\d{2})&#39;, r&#39;\g&lt;m&gt;/\g&lt;d&gt;/\g&lt;y&gt;&#39;, log))
+
+# ord(&#39;a&#39;) =&gt; 97
+# oct(ord(&#39;a&#39;)) =&gt; &#39;0o141&#39;
+# &#39;\141&#39; =&gt; &#39;a&#39;
+
+# &#39;\\2&#39; =&gt; &#39;\\2&#39;
+# len(&#39;\\2&#39;) =&gt; 2
+# r&#39;\2&#39; =&gt; &#39;\\2&#39;
+</code></pre>
+<h3 id='3-4-如何将多个小字符串拼接成一个大的字符串'>3-4 如何将多个小字符串拼接成一个大的字符串</h3>
+<pre><code class='language-python' lang='python'># [&quot;&lt;0112&gt;&quot;, &quot;&lt;32&gt;&quot;, &quot;&lt;1024x768&gt;&quot;, &quot;&lt;60&gt;&quot;, &quot;&lt;1&gt;&quot;, &quot;&lt;100.0&gt;&quot;, &quot;&lt;500.0&gt;&quot;]
+# =&gt; &quot;&lt;0112&gt;&lt;32&gt;&lt;1024x768&gt;&lt;60&gt;&lt;1&gt;&lt;100.0&gt;&lt;500.0&gt;&quot;
+
+# 方法一
+s1 = &#39;abcdef&#39;
+s2 = &#39;12345&#39;
+s1 + s2			# &#39;abcdef12345&#39;			# str.__add__(s1, s2)			# s1.__add__(s2)
+l = [&quot;&lt;0112&gt;&quot;, &quot;&lt;32&gt;&quot;, &quot;&lt;1024x768&gt;&quot;, &quot;&lt;60&gt;&quot;, &quot;&lt;1&gt;&quot;, &quot;&lt;100.0&gt;&quot;, &quot;&lt;500.0&gt;&quot;]
+s = &quot;&quot;
+for x in l:
+     s += x
+s
+
+from functools import reduce
+reduce(str.__add__, l)
+
+# 方法二
+str.join?
+l2 = [&quot;abc&quot;, &quot;efx&quot;, &quot;1234&quot;]
+&quot;;&quot;.join(l2)			# &#39;abc;efx;1234&#39;
+timeit &#39;&#39;.join(l)
+#119 ns ± 0.477 ns per loop (mean ± std. dev. of 7 runs, 10,000,000 loops each)
+</code></pre>
+<h3 id='3-5-如何对字符串进行左右居中对齐'>3-5 如何对字符串进行左、右、居中对齐</h3>
+<pre><code class='language-python' lang='python'># 方法一：str.ljust()、str.rjust()、str.center()
+s = &quot;abc&quot;
+s.ljust(10)
+# &#39;abc       &#39;
+s.ljust(2)
+s.ljust(10, &#39;*&#39;)
+
+# 方法二：format()
+format(s, &#39;&lt;10&#39;)
+format(s, &#39;&gt;10&#39;)
+format(s, &#39;^10&#39;)
+format(s, &#39;*^10&#39;)
+format(5, &#39;&gt;10&#39;)			# n=5			n.__format__(&#39;&gt;10&#39;)
+format(123, &#39;+&#39;)
+format(-123, &#39;&gt;+10&#39;)
+format(-123, &#39;=+10&#39;)
+format(-123, &#39;0=+10&#39;)
+
+In [22]: d = {
+    ...:     &quot;lodDist&quot;: 100.0,
+    ...:     &quot;SmallCull&quot;: 0.04,
+    ...:     &quot;DistCull&quot;: 500.0,
+    ...:     &quot;trilinear&quot;: 40,
+    ...:     &quot;farclip&quot;: 477,
+    ...: }
+w = max(map(len, d.keys()))
+for (k, v) in d.items():
+     print(k.ljust(w), &quot;:&quot;, v)
+</code></pre>
+<h2 id='第四章-对象迭代与反迭代相关问题与解决技巧'>第四章 对象迭代与反迭代相关问题与解决技巧</h2>
+<h3 id='4-1-如何实现可迭代对象和迭代器对象'>4-1 如何实现可迭代对象和迭代器对象</h3>
+<pre><code class='language-python' lang='python'>from collections import Iterable, Iterator
+
+l = [1,2,3,4,5]			# 可迭代对象
+for x in l:
+  print(x)
+
+isinstance(l, Iterable)
+issubclass(list, Iterable)
+issubclass(str, Iterable)
+issubclass(dict, Iterable)
+issubclass(int, Iterable)			# False
+
+# 返回一个迭代器对象
+it = iter(l)
+l.__iter__()
+it.__iter__()
+it.__iter__() is it
+Iterable.__abstractmethods__			# frozenset({&#39;__iter__&#39;})
+
+next(it)
+next(it)
+next(it)
+next(it)
+next(it)
+it.__next__()
+
+list(it)
+
+isinstance(it, Iterable)
+isinstance(it, Iterator)
+</code></pre>
+<h3 id='4-2-如何实现可迭代对象和迭代器对象'>4-2 如何实现可迭代对象和迭代器对象</h3>
+<pre><code class='language-python' lang='python'>url = &#39;http://wthrcdn.etouch.cn/weather_mini?city=北京&#39;
+import requests
+r = requests.get(url)
+r.text
+r.json()
+r.json()[&#39;data&#39;][&#39;city&#39;]
+r.json()[&#39;data&#39;][&#39;forecast&#39;][0]
+=======================================================
+from collections import Iterable, Iterator
+import requests
+
+class WeatherIterator(Iterator):
+    def __init__(self, cities):
+        self.cities = cities
+        self.index = 0
+
+    def __next__(self):
+        if self.index == len(self.cities):
+            raise StopIteration
+        city = self.cities[self.index]
+        self.index += 1
+        return self.get_weather(city)
+
+    def get_weather(self, city):
+        url = &#39;http://wthrcdn.etouch.cn/weather_mini?city=&#39; + &#39;city&#39;
+        r = requests.get(url)
+        data = r.json()[&#39;data&#39;][&#39;forecast&#39;][0]
+        return city, data[&#39;high&#39;], data[&#39;low&#39;]
+
+class WeatherIterable(Iterable):
+    def __init__(self, cities):
+        self.cities = cities
+
+    def __iter__(self):
+        return WeatherIterator(self.cities)
+
+def show(w):
+    for x in w:
+        print(x)
+
+w = WeatherIterable([&#39;北京&#39;, &#39;上海&#39;, &#39;广州&#39;] * 10)
+
+show(w)
+</code></pre>
+<h3 id='4-3-如何使用生成器函数实现可迭代对象'>4-3 如何使用生成器函数实现可迭代对象</h3>
+<pre><code class='language-python' lang='python'>def f():
+  print(&#39;in f 1&#39;)
+  yield 1
+  print(&#39;in f 2&#39;)
+  yield 2
+  print(&#39;in f 3&#39;)
+  yield 3
+  
+g = f()
+isinstance(g, Iterator)
+iter(g) is g
+next(g)
+
+g = f()
+for x in g:
+  print(x)
+========================
+from collections import Iterable
+
+class PirmeNumbers(Iterable):
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+    
+    def __iter__(self):
+        for k in range(self.a, self.b + 1):
+            if self.is_prime(k):
+                yield k
+
+    def is_prime(self, k):
+        return False if k &lt; 2 else all(map(lambda x: k % x, range(2, k)))
+        # if k &lt; 2:
+        #     return False
+        
+        # for x in range(2, k):
+        #     if k % x == 0:
+        #         return False
+        # return True
+    
+pn = PirmeNumbers(1, 30)
+for n in pn:
+    print(n)
+</code></pre>
+<h3 id='4-4-如何进行反向迭代以及如何实现反向迭代'>4-4 如何进行反向迭代以及如何实现反向迭代</h3>
+<pre><code class='language-python' lang='python'>l = [1, 2, 3, 4, 5]
+# 1
+l.reverse()
+l
+# 2
+l[::-1]
+# 3：反向迭代器，与iter(l)相反，必须实现__reversed__()方法
+reversed(l)
+====================================================
+class FloatRange:
+    def __init__(self, a, b, step):
+        self.a = a
+        self.b = b
+        self.step = step
+
+    def __iter__(self):
+        t = self.a
+        while t &lt;= self.b:
+            yield t
+            t += self.step
+
+    def __reversed__(self):
+        t = self.b
+        while t &gt;= self.a:
+            yield t
+            t -= self.step
+
+fr = FloatRange(3.0, 4.0, 0.2)
+
+for x in fr:
+    print(x)
+
+print(&#39;-&#39; * 20)
+
+for x in reversed(fr):
+    print(x)
+====================================================
+from decimal import Decimal
+Decimal(&quot;0.2&quot;)
+from functools import reduce
+reduce(Decimal.__add__, [Decimal(&#39;0.2&#39;)] * 5)
+</code></pre>
+<h3 id='4-5-如何对迭代器做切片操作'>4-5 如何对迭代器做切片操作</h3>
+<pre><code class='language-python' lang='python'>l = list(range(10))
+l[3]
+l.__getitem__(3)
+l[2:8]
+l.__getitem__(slice(2, 8, 1))
+
+f = open(&#39;/var/log/dpkg.log.1&#39;)
+lines = f.readlines(f)
+lines[100: 300]
+
+f = open(&#39;/var/log/dpkg.log.1&#39;)
+from itertools import islice
+for line in islice(f, 100, 300):
+  print(line)
+
+from itertools import islice
+def my_islice(iterable, start, end, step=1):
+  	tmp = 0
+    for i, x in enumerate(iterable):
+        if i &gt;= end:
+            break
+        if i &gt;= start:
+            if tmp == 0:
+                tmp = step
+                yield x
+            tmp -= 1
+print(list(my_islice(range(100, 150), 10, 20)))
+print(list(islice(range(100, 150), 10, 20)))
+print(list(my_islice(range(100, 150), 10, 20, 3)))
+print(list(islice(range(100, 150), 10, 20, 3)))
+</code></pre>
+<h3 id='4-6-如何在一个for语句中迭代多个可迭代对象'>4-6 如何在一个for语句中迭代多个可迭代对象</h3>
+<pre><code class='language-python' lang='python'>from random import randint
+chinese = [randint(60, 100) for _ in range(20)]
+math = [randint(60, 100) for _ in range(20)]
+english = [randint(60, 100) for _ in range(20)]
+# list(zip([1, 2, 3], [4, 5, 6], [7, 8, 9]))
+t = []
+for s1, s2, s3 in zip(chinese, math, english):
+  t.append(s1 + s2 + s3)
+[sum() for s in zip(chinese, math, english)]
+list(map(sum, zip(chinese, math, english)))
+list(map(lambda s1, s2, s3: s1 + s2 + s3, chinese, math, english))
+list(map(lambda *args: args, chinese, math, english))
+list(map(None, chinese, math, english))
+
+from itertools import chain
+chain([1,2,3], [4,5,6,7], [8,9])
+c1 = [randint(60, 100) for _ in range(20)]
+c2 = [randint(60, 100) for _ in range(20)]
+c3 = [randint(60, 100) for _ in range(23)]
+c4 = [randint(60, 100) for _ in range(25)]
+len([x for x in chain(c1, c2, c3, c4) if x &gt; 90])
+
+from functools import reduce
+s = &quot;abc;123|xyz;678|fweuow\tjzka&quot;
+list(reduce(lambda it_s, sep: chain(*map(lambda ss: ss.split(sep), it_s)), &#39;;|\t&#39;, [s]))
+</code></pre>
+<h2 id='第五章-文件io效率相关问题与解决技巧'>第五章 文件IO效率相关问题与解决技巧</h2>
+<h3 id='5-1-如何读写文本文件'>5-1 如何读写文本文件</h3>
+<pre><code class='language-python' lang='python'># 字符串的语义发生了变化：
+# python2   ---&gt;   python3
+# str              bytes
+# unicode          str
+
+s = &quot;abc&quot;
+type(s)			# str
+bin(ord(&quot;a&quot;))
+u = u&#39;刘&#39;
+s = &quot;刘硕&quot;
+type(s)			# str
+
+# python 2
+s = u&#39;我是王剑远，我爱python。&#39;
+type(s)			# unicode
+f = open(&#39;a.txt&#39;, &#39;w&#39;)
+f.write(s.encode(&#39;utf8&#39;))
+f.flush()
+cat a.txt
+f = open(&#39;a.txt&#39;)
+txt = f.read()
+type(txt)			# str
+print txt.decode(&#39;utf8&#39;)
+
+# python 3
+s = u&#39;我是王剑远，我爱python。&#39;
+type(s)			# str
+f = open(&#39;b.txt&#39;, &#39;wt&#39;, encoding=&#39;gbk&#39;)			# 默认文本模式t打开
+f.write(s)
+f.flush()
+cat b.txt
+f = open(&#39;b.txt&#39;, &#39;rt&#39;, encoding=&#39;gbk&#39;)
+f.read()
+</code></pre>
+<h3 id='5-2-如何处理二进制文件'>5-2 如何处理二进制文件</h3>
+<pre><code class='language-python' lang='python'>f = open(&#39;demo.wav&#39;, &#39;r&#39;)
+info = f.read(44)			# type(info) --&gt; bytes
+info[22: 24]
+import struct
+struct.unpack(&#39;&gt;h&#39;, info[22: 24])
+struct.unpack(&#39;i&#39;, info[24: 28])
+info.find(b&#39;data&#39;)
+f.seek(0)
+f.read(100)
+==============================================
+# 5_2.py
+import struct
+
+def find_subchunk(f, name):
+    f.seek(12)
+    while True:
+        chunk_name = f.read(4)
+        chunk_size, = struct.unpack(&#39;i&#39;, f.read(4))
+        
+        if chunk_name == name:
+            return f.tell(), chunk_size
+        
+        f.seek(chunk_size, 1)
+==============================================
+%load 5_2.py			# ipython
+offset, size = find_subchunk(f, b&#39;data&#39;)
+offset
+offset + size
+ll demo.wav			# ipython
+# f.read()
+import numpy as np
+buffer = np.zeros(size//2, dtype=np.short)
+f.readinto(buf)
+buf //= 8
+f2 = open(&#39;out.wav&#39;, &#39;wb&#39;)
+info = f.read(offset)
+f2.write(info)
+# f2.write(buf.tobytes())
+buf.tofile(f2)
+f2.close()
+</code></pre>
+<h3 id='5-2-如何设置文件的缓冲'>5-2 如何设置文件的缓冲</h3>
+<p>默认缓冲行为</p>
+<p>1、全缓冲</p>
+<pre><code class='language-python' lang='python'>f = open(&#39;a.bin&#39;, &#39;wb&#39;)
+tail -f a.bin			# shell
+f.write(b&quot;abc&quot;)
+f.write(b&quot;efg&quot;)
+dmesg | grep block			# shell
+import io
+io.DEFAULT_BUFFER_SIZE
+f.write(b&quot;+&quot; * (4096 - 6))
+f.write(b&quot;-&quot;)
+</code></pre>
+<pre><code class='language-python' lang='python'>f2 = open(a.txt, &#39;w&#39;)
+tail -f a.txt			# shell
+f2.write(&#39;a&#39; * 4095)
+# &#39;a&#39;.encode()
+f2.write(&#39;bc&#39;)
+f2.write(&#39;+&#39; * 999)
+f
+f2
+f2.buffer
+f2.write(&#39;*&#39; * (8192-5096))
+f2.write(&#39;-&#39;)
+</code></pre>
+<p>2、行缓冲</p>
+<pre><code class='language-python' lang='python'>tty			# shell
+ll /dev/ttys001			# shell
+f3 = open(&#39;/dev/ttys001&#39;, &#39;w&#39;)
+f3.isatty()
+f3.write(&#39;abc&#39;)
+f3.write(&#39;\n&#39;)
+</code></pre>
+<p>手动指定缓冲行为</p>
+<pre><code class='language-python' lang='python'>f = open(&#39;a.bin&#39;, &#39;wb&#39;, buffering=8192)
+f.raw.write(b&#39;abc&#39;)
+f = open(&#39;a.bin&#39;, &#39;wb&#39;, buffering=0)
+f2 = open(&#39;a.txt&#39;, &#39;w&#39;, buffering=1)
+</code></pre>
+<h3 id='5-4-如何将文件映射到内存'>5-4 如何将文件映射到内存</h3>
+<pre><code class='language-python' lang='python'>dd if=/dev/zero of=demo.bin bs=1024 count=1024
+od -x demo.bin
+import mmap
+mmap.mmap?
+import os
+os.open?
+f = open(&#39;demo.bin&#39;, &#39;r+b&#39;)
+f.fileno()
+mmap.PAGESIZE
+m = mmap.mmap(f.fileno(), 0)
+m.write(b&#39;abc&#39;)
+m[0]
+m[5] = 78
+m[8: 16] = b&#39;\xff&#39; * 8
+
+ls /dev/fb0
+sudo fbset
+==============================
+import mmap
+f = open(&#39;dev/fb0&#39;, &#39;r+b&#39;)
+size = 8294400
+m = mmap.mmap(f.fileno(), size)
+m[:size//2] = b&#39;\xff\xff\xff\x00&#39; * (size // 4 // 2)
+m.close()
+f.close()
+==============================
+sudo python3 5_3.py
+</code></pre>
+<h3 id='5-5-如何访问文件的状态'>5-5 如何访问文件的状态</h3>
+<pre><code class='language-python' lang='python'>ll
+import os
+s = bin(s.st_mode)
+os.stat(&#39;a.txt&#39;)
+# os.stat_result(st_mode=33204, st_ino=42157924, st_dev=16777233, st_nlink=1, st_uid=501, st_gid=20, st_size=376567, st_atime=1658755102, st_mtime=1658730358, st_ctime=1658755101)
+fd = os.open(&#39;test.py&#39;, os.O_RDONLY)
+os.read(fd, 10)
+bin(s.st_mode)
+ln a.txt b.txt			# shell
+rm b.txt			# shell
+mv a.txt c.txt			# shell
+import stat
+s = os.stat(&#39;a.txt&#39;)
+s2 = os.stat(&#39;d&#39;)
+s3 = os.stat(&#39;l.txt&#39;)
+stat.S_IFDIR &amp; s.st_mode
+stat.S_ISREG(s.st_mode)
+os.stat(&#39;l.txt&#39;, follow_symlinks=False)
+os.lstat(&#39;l.txt&#39;)
+
+stat.S_IRUSR &amp; s.st_mode
+import time
+time.localtime(s.st_atime)
+os.path.isdir(&#39;d&#39;)
+os.path.getatime(&#39;a.txt&#39;)
+</code></pre>
+<h3 id='5-6-如何使用临时文件'>5-6 如何使用临时文件</h3>
+<pre><code class='language-python' lang='python'># 标准库中的 TemporaryFile 以及 NamedTemporaryFile
+from tempfile import TemporaryFile, NamedTemporaryFile
+tf = TemporaryFile()
+tf.write(b&#39;*&#39; * 1024 * 1024)
+tf.write(b&#39;*&#39; * 1024 * 1024)
+tf.write(b&#39;*&#39; * 1024 * 1024)
+tf.seek(0)
+tf.read(512)
+tf.close()
+df -h			# shell
+import os
+os.open()
+man 2 open
+ntf = NamedTemporaryFile()
+ntf.name
+import tempfile
+tempfile.gettempdir()
+tempfile.gettempprefix()
+ntf.close()
+ntf2 = NamedTemporaryFile(delete=False)
+</code></pre>
+<h2 id='第六章-数据解析与构建相关问题与解决技巧'>第六章 数据解析与构建相关问题与解决技巧</h2>
+<h3 id='如何读写csv数据'>如何读写csv数据</h3>
+<pre><code class='language-python' lang='python'>import csv
+rf = open(&#39;books.csv&#39;)
+reader = csv.reader(rf, delimiter=&#39;;&#39;)
+reader.__next__
+next(reader)
+wf = open(&#39;demo.csv&#39;, &#39;w&#39;)
+writer = csv.writer(wf, delimiter=&#39; &#39;)
+writer.writerow([&#39;x&#39;, &#39;y&#39;, &#39;z&#39;])
+writer.writerow([&#39;1&#39;, &#39;2&#39;, &#39;3&#39;])
+writer.writerow([&#39;9&#39;, &#39;8&#39;, &#39;7&#39;])
+wf.flush()
+cat demo.csv
+==============================================
+import csv
+with open(&#39;book.csv&#39;) as rf:
+  reader = csv.reader(rf)
+  headers = next(reader)
+  with open(&#39;books_out.csv&#39;, &#39;w&#39;) as wf:
+    writer = csv.writer(wf)
+    writer.writerow(headers)
+    
+    for book in reader:
+      price = book[-2]
+      if price and float(price) &gt;= 80.00:
+        writer.writerow(book)
+</code></pre>
+<h3 id='如何读写json数据'>如何读写json数据</h3>
+<pre><code class='language-python' lang='python'>import requests
+r = requests.get(&#39;http://httpbin.org/headers&#39;)
+r.content
+r.text
+import json
+d = json.loads(r.text)
+d[&#39;headers&#39;][&#39;Host&#39;]
+
+sudo docker run -p 8050:8050 scrapinghub/splash
+url = &#39;http://localhost:8050/render.html&#39;
+headers = {&#39;content-type: application/json&#39;}
+data = {&#39;url&#39;: &#39;http://jd.com&#39;, &#39;timeout&#39;: 20, &#39;images&#39;: 0}
+json_data = json.dumps(data)
+r2 = requests.post(url, headers=headers, data=json_data)
+r2
+r2.text
+
+f = open(&#39;demo.json&#39;, &#39;w&#39;)
+json.dump(data, f)
+f.close()
+f2 = open(&#39;demo.json&#39;)
+json.load(f2)
+</code></pre>
+<h3 id='如何读写excel文件'>如何读写excel文件</h3>
+<pre><code class='language-python' lang='python'>import xlrd
+book = xlrd.open_workbook(&#39;demo.xlsx&#39;)
+book
+book.sheets()
+sheet = book.sheet_by_index(0)
+c00 = sheet.cell(0, 0)
+type(c00)
+c00.ctype
+c00.value
+xlrd.XL_CELL_TEXT
+sheet.cell_value(1, 1)
+sheet.row(0)
+sheet.row_values(0)
+sheet.row_values(1, 1)
+sheet.put_cell(0, sheet.ncols, xlrd.XL_CELL_TEXT, &#39;总分&#39;, None)
+</code></pre>
+<h2 id='第七章-类与对象深度问题与解决技巧'>第七章 类与对象深度问题与解决技巧</h2>
+<h3 id='7-1-如何派生内置不可变类型并修改其实例化行为'>7-1 如何派生内置不可变类型并修改其实例化行为</h3>
+<pre><code class='language-python' lang='python'>class A:
+    def __new__(cls, *args):
+        print(&#39;In A.__new__&#39;, cls, args)
+        return object.__new__(cls)
+
+    def __init__(self, *args):
+        print(&#39;In A.__init__&#39;, args)
+
+# a = A(1, 2)
+a = A.__new__(A, 1, 2)
+a
+A.__init__(a, 1, 2)
+</code></pre>
+<pre><code class='language-python' lang='python'>class IntTuple(tuple):
+    def __new__(cls, iterable):
+        f_it = (e for e in iterable if isinstance(e, int) and e &gt; 0)
+        return super().__new__(cls, f_it)
+
+
+int_t = IntTuple([1, -1, &#39;abc&#39;, 6, [&#39;x&#39;, &#39;y&#39;], 3])
+print(int_t)
+</code></pre>
+<h3 id='7-2-如何为创建大量实例节省内存'>7-2 如何为创建大量实例节省内存</h3>
+<pre><code class='language-python' lang='python'>class Player1:
+    def __init__(self, uid, name, level):
+        self.uid = uid
+        self.name = name
+        self.level = level
+
+class Player2:
+    __slots__ = [&#39;uid&#39;, &#39;name&#39;, &#39;level&#39;]
+    def __init__(self, uid, name, level):
+        self.uid = uid
+        self.name = name
+        self.level = level
+
+p1 = Player1(&#39;0001&#39;, &#39;Jim&#39;, 20)
+p2 = Player2(&#39;0001&#39;, &#39;Jim&#39;, 20)
+
+set(dir(p1)) - set(dir(p2))
+p1.x = 100
+p1.y = 200
+p1.__dict__
+p1.__dict__[z] = 300
+p1.__dict__.pop(&#39;x&#39;)
+
+import sys
+sys.getsizeof(p1.__dict__)
+
+import tracemalloc
+tracemalloc.start()
+# start
+la = [Player1(1, 2, 3) for _ in range(100000)]
+lb = [Player2(1, 2, 3) for _ in range(100000)]
+# end
+snapshot = tracemalloc.take_snapshot()
+top_stats = snapshot.statistics(&#39;lineno&#39;)
+for stat in top_stats[:10]: print(stat)
+</code></pre>
+<h3 id='7-3-如何让对象支持上下文管理'>7-3 如何让对象支持上下文管理</h3>
+<pre><code class='language-python' lang='python'>from sys import stdin, stdout
+import getpass
+import telnetlib
+from collections import dequeue
+from xmlrpc.client import _HostType
+
+class TelnetClient:
+  def __init__(self, host, port=23):
+    self.host = host
+    self.port = port
+
+  def connect(self):
+    self.tn = telnetlib.Telnet(self.host, self.port)
+    self.history = dequeue([])
+
+  def cleanup(self):
+    self.tn.close()
+    self.tn = None
+
+    with open(&#39;history.txt&#39;, &#39;a&#39;) as f:
+      f.writelines(self.history)
+
+  def login(self):
+    # user
+    self.tn.read_until(b&quot;login: &quot;)
+    user = input(&quot;Enter your remote account: &quot;)
+    self.tn.write(user.encode(&#39;utf-8&#39;) + b&quot;\n&quot;)
+
+    # password
+    self.tn.read_until(b&quot;Password: &quot;)
+    password = getpass.getpass()
+    self.tn.write(password.encode(&#39;utf-8&#39;) + b&quot;\n&quot;)
+    out = self.tn.read_until(b&#39;$ &#39;)
+    stdout.write(out.decode(&#39;utf-8&#39;))
+
+  def interact(self):
+    while True:
+      cmd = stdin.readline()
+      if not cmd:
+        break
+
+      self.history.append(cmd)
+      self.tn.write(cmd.encode(&#39;utf8&#39;))
+      out = self.tn.read_until(b&#39;$ &#39;).decode(&#39;utf-8&#39;)
+
+      stdout.write(out[len(cmd)+1:])
+      stdout.flush()
+
+client = TelnetClient(&#39;192.168.0.105&#39;)
+client.connect()
+client.login()
+client.interact()
+client.cleanup()
+</code></pre>
+<pre><code class='language-python' lang='python'>with open(&#39;demo.txt&#39;, &#39;w&#39;) as f:
+  f.write(&#39;abc&#39;)
+  f.write(&#39;def&#39;)
+
+f.close()     # True
+
+F = open(&#39;demo.txt&#39;, &#39;w&#39;)
+f = F.__enter__()
+f is F      # True
+F.__exit__()
+</code></pre>
+<h3 id='7-4-如何创建可管理的对象属性'>7-4 如何创建可管理的对象属性</h3>
+<pre><code class='language-python' lang='python'>import math
+
+
+class Circle:
+    def __init__(self, radius) -&gt; None:
+        self.radius = radius
+
+    def get_radius(self):
+        return round(self.radius, 1)
+
+    def set_radius(self, radius):
+        if not isinstance(radius, (int, float)):
+            raise TypeError(&quot;wronge type&quot;)
+        self.radius = radius
+
+    @property
+    def S(self):
+        return self.radius ** 2 * math.pi
+
+    @S.setter
+    def S(self, s):
+        self.radius = math.sqrt(s / math.pi)
+
+    R = property(get_radius, set_radius)
+
+
+c = Circle(5.712)
+c.S = 99.88
+print(c.S)
+print(c.R)
+
+# c.R = 100.987
+# print(c.R * 2)
+</code></pre>
+<h3 id='7-5-如何让类支持比较操作'>7-5 如何让类支持比较操作</h3>
+<pre><code class='language-python' lang='python'>from functools import total_ordering
+
+@total_ordering
+class Rect:
+  def __init__(self, w, h):
+    self.w = w
+    self.h = h
+    
+  def area(self):
+    return self.w * self.h
+  
+  def __str__(self):
+    return &#39;Rect:(%s, %s)&#39; % (self.w, self.h)
+  
+  def __lt__(self, obj):
+    return self.area() &lt; obj.area()
+  
+  def __eq__(self, obj):
+    return self.area() == obj.area()
+  
+rect1 = Rect(6, 9)
+rect2 = Rect(7, 8)
+print(rect1 &lt; rect2)
+</code></pre>
+<h3 id='7-6-如何使用描述符对实例属性做类型检查'>7-6 如何使用描述符对实例属性做类型检查</h3>
+<pre><code class='language-python' lang='python'>class Attr:
+  def __init__(self, key, type_):
+    self.key = key
+    self.type_ = type_
+  
+  def __set__(self, instance, value):
+    print(&#39;in __set__&#39;)
+    if not isinstance(value, self.type_):
+      raise TypeError(&#39;must be %s&#39; % self.type_)
+    instance.__dict__[self.key] = value
+    
+  def __get__(self, instance, cls):
+    print(&#39;in __get__&#39;, instance, cls)
+    return instance.__dict__[self.key]
+
+  def __delete__(self, instance):
+    print(&#39;in __del__&#39;, instance)
+    del instance.__dict__[self.key]
+  
+class Person:
+  name = Attr(&#39;name&#39;, str)
+  age = Attr(&#39;age&#39;, int)
+
+p = Person()
+p.name = &#39;liushuo&#39;
+p.age = 34
+</code></pre>
+<h3 id='7-7-如何在环状数据结构中管理内存'>7-7 如何在环状数据结构中管理内存</h3>
+<pre><code class='language-python' lang='python'>class A:
+  def __del__(self):
+    print(&#39;in __del__&#39;)
+    
+a = A()
+# a2 = a
+
+# a2 = None
+# a = 1
+
+import weakref			# 弱引用：不增加引用计数的引用
+a2 = weakref.ref()
+a3 = a2()
+a3 is a
+del a
+del a3
+a2()
+a2 is None
+</code></pre>
+<h3 id='7-8-如何通过方法名字的字符串调用方法'>7-8 如何通过方法名字的字符串调用方法</h3>
+<pre><code class='language-python' lang='python'>s = &#39;abc123&#39;
+s.find(&#39;123&#39;)
+getattr(s, &#39;find&#39;)(&#39;123&#39;)
+getattr(s, &#39;pop&#39;, None)
+</code></pre>
+<h2 id='第八章-多线程并发相关问题与解决技巧'>第八章 多线程并发相关问题与解决技巧</h2>
+<h3 id='8-1-如何使用多线程'>8-1 如何使用多线程</h3>
+<h3 id='8-2-如何线程间通信'>8-2 如何线程间通信</h3>
+<pre><code class='language-python' lang='python'>from threading import Thread
+
+
+def compute():
+    s = 0
+    for i in range(100):
+        s += i
+
+
+thread1 = Thread(target=compute)
+thread2 = Thread(target=compute)
+
+thread1.start()
+thread2.start()
+</code></pre>
+<h3 id='8-3-如何在线程间进行事件通知'>8-3 如何在线程间进行事件通知</h3>
+<pre><code class='language-python' lang='python'>from threading import Thread, Event
+
+
+def f(event):
+    print(&#39;wait event...&#39;)
+    event.wait()
+    print(&#39;f end...&#39;)
+    
+    
+e = Event()
+thread = Thread(target=f, args=(e,))
+</code></pre>
+<h3 id='8-5-如何使用线程池'>8-5 如何使用线程池</h3>
+<pre><code class='language-python' lang='python'>import threading, time, random
+def f(a, b):
+  print(threading.current_thread().name, &#39;:&#39;, a, b)
+  time.sleep(random.randint(5, 10))
+  return a * b
+from concurrent.futures import ThreadPoolExcutor
+executor = ThreadPoolExcutor(3)
+future = executor.submit(f, 2, 3)
+future.result()
+executor.map(f, range(1, 6), range(2, 7))
+list[executor.map(f, range(1, 6), range(2, 7))]
+</code></pre>
+<h3 id='8-6-如何使用多进程'>8-6 如何使用多进程</h3>
+<pre><code class='language-python' lang='python'>from multiprocessing import Process
+def f(n):
+  print(&#39;in child..&#39;)
+  import time
+  time.sleep(n)
+  
+p = Process(target=f, args=(10,))
+p.start()
+p.join()
+</code></pre>
+<pre><code class='language-python' lang='python'>from threading import Thread
+x = 1
+def g():
+	global x
+	x += 1
+
+Thread(target=g).start()
+Process(target=g).start()
+</code></pre>
+<pre><code class='language-python' lang='python'>from multiprocessing import Queue, Pipe
+from queue import Queue
+def f(q):
+  print(&#39;in child&#39;)
+  print(q.get())
+Process(target=f, args=(q,)).start()
+q.put(&#39;abc&#39;)
+</code></pre>
+<pre><code class='language-python' lang='python'>c1, c2 = Pipe()
+# c1.send()
+# c1.recv()
+def f(c):
+  print(&#39;in child&#39;)
+  data = c.recv()
+  print(data)
+  c.send(data * 2)
+Process(target=f, args=(c2,)).start()
+c1.send(100)
+c1.recv()
+</code></pre>
+<h2 id='第九章-装饰器使用问题与技巧'>第九章 装饰器使用问题与技巧</h2>
+<h3 id='9-1-如何使用函数装饰器'>9-1 如何使用函数装饰器</h3>
+<pre><code class='language-python' lang='python'>def memo(func):
+    cache = {}
+
+    def wrap(*args):
+        res = cache.get(args)
+        if not res:
+            res = cache[args] = func(*args)
+        return res
+
+    return wrap
+
+
+def fibonacci(n):
+    if n &lt;= 1:
+        return 1
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+
+fibonacci = memo(fibonacci)
+
+
+def climb(n, steps):
+    count = 0
+    if n == 0:
+        count = 1
+    elif n &gt; 0:
+        for step in steps:
+            count += climb(n - step, steps)
+    return count
+
+
+climb = memo(climb)
+print(climb(100, (1, 2, 3)))
+</code></pre>
+<h3 id='9-2-如何为被装饰的函数保存元数据'>9-2 如何为被装饰的函数保存元数据</h3>
+<pre><code class='language-python' lang='python'>from functools import update_wrapper, WRAPPER_ASSIGNMENTS, WRAPPER_UPDATES, wraps
+update_wrapper(wrap, func, (&#39;__name__&#39;, &#39;__doc__&#39;), (&#39;__dict__&#39;))
+</code></pre>
+<h1 id='网络爬虫'>网络爬虫</h1>
+<h2 id='selenium'>selenium</h2>
+<p><img src="/Users/wjy/Library/Application Support/typora-user-images/截屏2022-08-07 11.27.47.png" referrerpolicy="no-referrer" alt="截屏2022-08-07 11.27.47"></p>
+<h1 id='python操作数据库'>Python操作数据库</h1>
+<pre><code class='language-python' lang='python'>from pymysql import connect, Error
+conn = None
+try:
+	conn = connect(
+		host=&#39;127.0.0.1&#39;,
+  	port=3306,
+  	user=&#39;root&#39;,
+  	password=&#39;&#39;,
+  	database=&#39;my_data_base&#39;
+	)
+  print(conn)
+except Error as e:
+  print(&#39;连接失败: {}&#39;.format(e))
+finally:
+	try:
+		conn.close()
+  except Exception as e:
+    print(&#39;数据库连接关闭失败: {}&#39;.format(e))
+</code></pre>
+<h1 id='machine-learning'>Machine Learning</h1>
+<h2 id='梯度下降法'>梯度下降法</h2>
+<pre><code class='language-python' lang='python'>import numpy as np
+import matplotlib.pyplot as plt
+
+plot_x = np.linspace(-1, 6, 141)
+plot_y = (plot_x-2.5)**2-1
+
+def dJ(theta):
+    return 2*(theta-2.5)
+def J(theta):
+    try:
+        return (theta-2.5)**2-1
+    except:
+        return float(&#39;inf&#39;)
+      
+def gradient_descent(initial_theta, eta, n_iters = 1e4, epsilon = 1e-8):
+    theta = initial_theta
+    theta_history.append(theta)
+    i_iter = 0
+    while i_iter &lt; n_iters:
+        gradient = dJ(theta)
+        last_theta = theta
+        theta = theta - eta * gradient
+        theta_history.append(theta)
+        if(abs(J(theta) - J(last_theta)) &lt; epsilon):
+            break
+        i_iter += 1
+
+def plot_theta_history():
+    plt.plot(plot_x, plot_y)
+    plt.plot(np.array(theta_history), J(np.array(theta_history)), color=&#39;r&#39;, marker=&#39;+&#39;)
+    plt.show
+    
+eta = 0.1
+theta_history = []
+gradient_descent(0., eta)
+plot_theta_history()
+</code></pre>
+<h1 id='附录'>附录</h1>
+<h2 id='anaconda'>Anaconda</h2>
+<pre><code class='language-shell' lang='shell'>conda create -n tfjs python=3.6.8
+conda remove -n tfjs --all
+conda info --envs
+conda activate tfjs
+pip install tensorflow --no-cache-dir
+tensorflowjs_converter -h
+conda deactivate
+</code></pre>
+</body>
+</html>
